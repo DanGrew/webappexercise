@@ -1,11 +1,12 @@
-<window title="Search" width="100%" border="normal"
+<window title="Search" width="100%" height="100%" border="normal"
 	apply="demo.getting_started.mvc.SearchController">
 	<hbox align="center">
 		Keyword:
 		<textbox id="keywordBox" />
 		<button id="searchButton" label="Search" iconSclass="z-icon-search" />
 	</hbox>
-	<listbox id="carListbox" emptyMessage="No car found in the result" height="160px" style="margin-top:10px">
+	<listbox id="carListbox" emptyMessage="No car found in the result" style="margin-top:10px" 
+				mold="paging" pageSize="5">
 		<listhead>
 			<listheader label="Model" />
 			<listheader label="Make" />
