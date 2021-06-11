@@ -4,6 +4,11 @@
 		Keyword:
 		<textbox id="keywordBox" />
 		<button id="searchButton" label="Search" iconSclass="z-icon-search" />
+		<checkbox label="Paging" checked="true">
+			<attribute name="onCheck"><![CDATA[
+            carListbox.mold = "paging".equals(carListbox.mold) ? "" : "paging";
+        ]]></attribute>
+		</checkbox>
 	</hbox>
 	<listbox id="carListbox" emptyMessage="No car found in the result" style="margin-top:10px" 
 				mold="paging" pageSize="5">
