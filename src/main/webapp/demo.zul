@@ -10,12 +10,24 @@
         ]]></attribute>
 		</checkbox>
 	</hbox>
+	<zscript><![CDATA[
+        import java.util.Comparator;
+        import demo.getting_started.model.comparator.ModelComparator;
+        import demo.getting_started.model.comparator.MakeComparator;
+        import demo.getting_started.model.comparator.PriceComparator;
+        Comparator modelComparatorAsc = new ModelComparator();
+        Comparator modelComparatorDesc = modelComparatorAsc.reversed();
+        Comparator makeComparatorAsc = new MakeComparator();
+        Comparator makeComparatorDesc = makeComparatorAsc.reversed();
+        Comparator priceComparatorAsc = new PriceComparator();
+        Comparator priceComparatorDesc = priceComparatorAsc.reversed();
+    ]]></zscript>
 	<listbox id="carListbox" emptyMessage="No car found in the result" style="margin-top:10px" 
 				mold="paging" pageSize="5">
 		<listhead>
-			<listheader label="Model" />
-			<listheader label="Make" />
-			<listheader label="Price" width="20%"/>
+			<listheader label="Model" sortAscending="${modelComparatorAsc}" sortDescending="${modelComparatorDesc}"/>
+			<listheader label="Make" sortAscending="${makeComparatorAsc}" sortDescending="${makeComparatorDesc}" />
+			<listheader label="Price" width="20%" sortAscending="${priceComparatorAsc}" sortDescending="${priceComparatorDesc}"/>
 		</listhead>
 		<template name="model">
 			<listitem>
