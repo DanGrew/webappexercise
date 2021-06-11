@@ -21,8 +21,8 @@ import demo.getting_started.tutorial.CarServiceImpl;
 
 public class SearchController extends SelectorComposer<Component> {
 
-	private static final long serialVersionUID = 1L;
-	
+   private static final long serialVersionUID = 1L;
+
 	@Wire
 	private Textbox keywordBox;
 	@Wire
@@ -39,29 +39,34 @@ public class SearchController extends SelectorComposer<Component> {
 	private Image previewImage;
 	@Wire
 	private Component detailBox;
-	
-	
-	private CarService carService = new CarServiceImpl();
-	
-	@Listen("onClick = #searchButton")
+
+
+   private CarService carService = new CarServiceImpl();
+
+   @Listen("onClick = #searchButton")
 	public void search(){
-		String keyword = keywordBox.getValue();
-		List<Car> result = carService.search(keyword);
-		carListbox.setModel(new ListModelList<Car>(result));
-	}
-	
-	@Listen("onSelect = #carListbox")
+      String keyword = keywordBox.getValue();
+      List<Car> result = carService.search(keyword);
+      carListbox.setModel(new ListModelList<Car>(result));
+   }
+
+   @Listen("onSelect = #carListbox")
 	public void showDetail(){
-		detailBox.setVisible(true);
-		
+      detailBox.setVisible(true);
+
 		Set<Car> selection = ((Selectable<Car>)carListbox.getModel()).getSelection();
 		if (selection!=null && !selection.isEmpty()){
-			Car selected = selection.iterator().next();
-			previewImage.setSrc(selected.getPreview());
-			modelLabel.setValue(selected.getModel());
-			makeLabel.setValue(selected.getMake());
-			priceLabel.setValue(selected.getPrice().toString());
-			descriptionLabel.setValue(selected.getDescription());
-		}
-	}
+         Car selected = selection.iterator().next();
+         previewImage.setSrc(selected.getPreview());
+         modelLabel.setValue(selected.getModel());
+         makeLabel.setValue(selected.getMake());
+         priceLabel.setValue(selected.getPrice().toString());
+         descriptionLabel.setValue(selected.getDescription());
+      }
+   }
+
+   @Listen("onCreate = #carListbox")
+   public void windowLoad() {
+      search();
+   }
 }
