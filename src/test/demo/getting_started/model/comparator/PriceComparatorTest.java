@@ -20,8 +20,8 @@ public class PriceComparatorTest {
 
    @Test
    public void shouldSortPriceAscending() {
-      Car lowerPrice = new Car(null, null, null, null, null, 2000);
-      Car higherPrice = new Car(null, null, null, null, null, 3000);
+      Car lowerPrice = new Car(null, null, null, null, null, 2000, null);
+      Car higherPrice = new Car(null, null, null, null, null, 3000, null);
 
       assertThat(systemUnderTest.compare(lowerPrice, higherPrice), lessThan(0));
       assertThat(systemUnderTest.compare(higherPrice, lowerPrice), greaterThan(0));
@@ -31,8 +31,8 @@ public class PriceComparatorTest {
 
    @Test
    public void shouldInterpretNullAsZero() {
-      Car lowerPrice = new Car(null, null, null, null, null, null);
-      Car higherPrice = new Car(null, null, null, null, null, 3000);
+      Car lowerPrice = new Car(null, null, null, null, null, null, null);
+      Car higherPrice = new Car(null, null, null, null, null, 3000, null);
 
       assertThat(systemUnderTest.compare(lowerPrice, higherPrice), equalTo(-1));
       assertThat(systemUnderTest.compare(higherPrice, lowerPrice), equalTo(1));

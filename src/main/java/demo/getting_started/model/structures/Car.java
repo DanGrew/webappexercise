@@ -10,13 +10,13 @@ public class Car {
    private String preview;
    private String description;
    private Integer price;
-   private Color colour;
+   private SortableColour colour;
 
    public Car() {
       this(null, null, null, null, null, null, null);
    }
 
-   public Car(Integer id, String model, String make, String description, String preview, Integer price, Color colour) {
+   public Car(Integer id, String model, String make, String description, String preview, Integer price, SortableColour colour) {
       this.id = id;
       this.model = model;
       this.make = make;
@@ -74,11 +74,11 @@ public class Car {
       this.model = model;
    }
 
-   public Color getColour() {
+   public SortableColour getColour() {
       return colour;
    }
 
-   public void setColour(Color colour) {
+   public void setColour(SortableColour colour) {
       this.colour = colour;
    }
 }

@@ -20,8 +20,8 @@ public class ModelComparatorTest {
 
    @Test
    public void shouldSortModelAscending() {
-      Car bestModel = new Car(null, "Best Model", null, null, null, null);
-      Car worstModel = new Car(null, "Worst Model", null, null, null, null);
+      Car bestModel = new Car(null, "Best Model", null, null, null, null, null);
+      Car worstModel = new Car(null, "Worst Model", null, null, null, null, null);
 
       assertThat(systemUnderTest.compare(bestModel, worstModel), lessThan(0));
       assertThat(systemUnderTest.compare(worstModel, bestModel), greaterThan(0));
@@ -31,8 +31,8 @@ public class ModelComparatorTest {
 
    @Test
    public void shouldInterpretNoModelAsEmpty() {
-      Car bestModel = new Car(null, null, null, null, null, null);
-      Car worstModel = new Car(null, "Worst Model", null, null, null, null);
+      Car bestModel = new Car(null, null, null, null, null, null, null);
+      Car worstModel = new Car(null, "Worst Model", null, null, null, null, null);
 
       assertThat(systemUnderTest.compare(bestModel, worstModel), lessThan(0));
       assertThat(systemUnderTest.compare(worstModel, bestModel), greaterThan(0));

@@ -20,8 +20,8 @@ public class MakeComparatorTest {
 
    @Test
    public void shouldSortMakeAscending() {
-      Car bestMake = new Car(null, null, "Best Make", null, null, null);
-      Car worstMake = new Car(null, null, "Worst Make", null, null, null);
+      Car bestMake = new Car(null, null, "Best Make", null, null, null, null);
+      Car worstMake = new Car(null, null, "Worst Make", null, null, null, null);
 
       assertThat(systemUnderTest.compare(bestMake, worstMake), lessThan(0));
       assertThat(systemUnderTest.compare(worstMake, bestMake), greaterThan(0));
@@ -31,8 +31,8 @@ public class MakeComparatorTest {
 
    @Test
    public void shouldInterpretNoMakeAsEmpty() {
-      Car bestMake = new Car(null, null, null, null, null, null);
-      Car worstMake = new Car(null, null, "Worst Make", null, null, null);
+      Car bestMake = new Car(null, null, null, null, null, null, null);
+      Car worstMake = new Car(null, null, "Worst Make", null, null, null, null);
 
       assertThat(systemUnderTest.compare(bestMake, worstMake), lessThan(0));
       assertThat(systemUnderTest.compare(worstMake, bestMake), greaterThan(0));
