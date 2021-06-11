@@ -1,4 +1,6 @@
-package demo.getting_started.tutorial;
+package demo.getting_started.model.services;
+
+import demo.getting_started.model.structures.Car;
 
 import java.util.List;
 

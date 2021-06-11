@@ -1,7 +1,6 @@
 package demo.getting_started.model.comparator;
 
-import demo.getting_started.model.comparator.PriceComparator;
-import demo.getting_started.tutorial.Car;
+import demo.getting_started.model.structures.Car;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

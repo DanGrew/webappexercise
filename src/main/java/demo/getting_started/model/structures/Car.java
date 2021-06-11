@@ -1,4 +1,4 @@
-package demo.getting_started.tutorial;
+package demo.getting_started.model.structures;
 
 public class Car {
 

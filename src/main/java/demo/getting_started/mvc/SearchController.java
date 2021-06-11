@@ -15,9 +15,9 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.ext.Selectable;
 
-import demo.getting_started.tutorial.Car;
-import demo.getting_started.tutorial.CarService;
-import demo.getting_started.tutorial.CarServiceImpl;
+import demo.getting_started.model.structures.Car;
+import demo.getting_started.model.services.CarService;
+import demo.getting_started.model.services.CarServiceImpl;
 
 public class SearchController extends SelectorComposer<Component> {
 
