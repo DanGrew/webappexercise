@@ -1,5 +1,6 @@
 package demo.getting_started.utility;
 
+import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 
 /**
@@ -14,5 +15,21 @@ public class ExecutionsHandle {
     */
    public String retrieveParameter( String parameter ) {
       return Executions.getCurrent().getParameter( parameter );
+   }
+
+   /**
+    * See {@link Executions#getCurrent()} and {@link Execution#getNativeResponse()}.
+    * @return the native response.
+    */
+   public Object getNativeResponse() {
+      return Executions.getCurrent().getNativeResponse();
+   }
+
+   /**
+    * See {@link Executions#getCurrent()} and {@link Execution#getNativeRequest()}.
+    * @return the native request.
+    */
+   public Object getNativeRequest() {
+      return Executions.getCurrent().getNativeRequest();
    }
 }

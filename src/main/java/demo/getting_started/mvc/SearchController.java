@@ -18,7 +18,6 @@ import org.zkoss.zul.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 import static java.util.Collections.singleton;
 
@@ -37,6 +36,8 @@ public class SearchController extends SelectorComposer< Component > {
    @Wire
    private Listbox carListbox;
    @Wire
+   private Listheader modelHeader;
+   @Wire
    private Label modelLabel;
    @Wire
    private Label makeLabel;
@@ -48,20 +49,41 @@ public class SearchController extends SelectorComposer< Component > {
    private Image previewImage;
    @Wire
    private Component detailBox;
+   @Wire
+   private Checkbox pagingCheckBox;
 
    @WireVariable
    private CarService carService;
 
    private final PageRedirect pageRedirect;
    private final Messages messages;
+   private final ListPaging listPaging;
+   private final ListModelOperations listModelOperations;
 
+   /**
+    * Constructs a new {@link SearchController}.
+    */
    public SearchController() {
-      this( new PageRedirect(), new Messages() );
+      this( new PageRedirect(), new Messages(), new ListPaging() );
    }
 
-   SearchController( PageRedirect pageRedirect, Messages messages ) {
+   /**
+    * Constructs a new {@link SearchController}.
+    * @param pageRedirect for managing page redirection.
+    * @param messages     for managing user messages.
+    * @param listPaging   for managing list paging.
+    */
+   SearchController( PageRedirect pageRedirect, Messages messages, ListPaging listPaging ) {
       this.pageRedirect = pageRedirect;
       this.messages = messages;
+      this.listPaging = listPaging;
+      this.listModelOperations = new ListModelOperations();
+   }
+
+   @Override
+   public void doAfterCompose( Component comp ) throws Exception {
+      super.doAfterCompose( comp );
+      listPaging.configurePagingComponentsAfterCompose( carListbox, pagingCheckBox );
    }
 
    /**
@@ -73,8 +95,8 @@ public class SearchController extends SelectorComposer< Component > {
       List< Car > result = carService.search( keyword );
 
       //identify current selection
-      Optional< Car > existingSelection = extractCurrentModel()
-            .flatMap( this::retrieveCurrentSelection );
+      Optional< Car > existingSelection = listModelOperations.extractCurrentModel( carListbox )
+            .flatMap( listModelOperations::retrieveCurrentSelection );
 
       ListModelList< Car > searchResultModel = new ListModelList<>( result );
       carListbox.setModel( searchResultModel );
@@ -92,12 +114,12 @@ public class SearchController extends SelectorComposer< Component > {
     */
    @Listen( "onSelect = #carListbox" )
    public void showDetailForCurrentSelection() {
-      ListModelList< Car > model = extractCurrentModel()
+      ListModelList< Car > model = listModelOperations.extractCurrentModel( carListbox )
             .orElseThrow( () -> new IllegalStateException(
                   "Application only supports ListModelList."
             ) );
 
-      Optional< Car > currentSelection = retrieveCurrentSelection( model );
+      Optional< Car > currentSelection = listModelOperations.retrieveCurrentSelection( model );
       if ( !currentSelection.isPresent() ) {
          //nothing to select, hide detail
          detailBox.setVisible( false );
@@ -122,46 +144,17 @@ public class SearchController extends SelectorComposer< Component > {
       descriptionLabel.setValue( selected.getDescription() );
    }
 
-   private ListModelList< Car > expectModel() {
-      return extractCurrentModel()
-            .orElseThrow( () -> new IllegalStateException( "Expected model not present." ) );
+   /**
+    * Handles the user changing the state of the paging mode.
+    */
+   @Listen( "onCheck = #pagingCheckBox" )
+   public void pagingModeChanged() {
+      listPaging.configurePagingInResponseToCheck( carListbox, pagingCheckBox );
    }
 
-   /**
-    * Convenience method to retrieve the {@link ListModelList} expected from the car listbox. It
-    * is expected that this application only uses {@link ListModelList} however on start up, a
-    * system default may be provided which will subsequently be replaced.
-    * @return the model expected or empty if it has not been set yet.
-    */
-   private Optional< ListModelList< Car > > extractCurrentModel() {
-      ListModel< ? > model = carListbox.getModel();
-      if ( model == null ) {
-         return Optional.empty();
-      }
-
-      if ( model instanceof ListModelList ) {
-         return Optional.ofNullable( ( ListModelList< Car > ) model );
-      }
-
-      return Optional.empty();
-   }
-
-   /**
-    * Retrieves the current selection from the given model.
-    * @param model to retrieve the selection from.
-    * @return the current selection, if there is one. Note that this expects that multi selection
-    * is not possible.
-    */
-   private Optional< Car > retrieveCurrentSelection( ListModelList< Car > model ) {
-      if ( model == null || model.isEmpty() ) {
-         return Optional.empty();
-      }
-
-      Set< Car > selection = model.getSelection();
-      if ( selection == null || selection.isEmpty() ) {
-         return Optional.empty();
-      }
-      return Optional.ofNullable( selection.iterator().next() );
+   @Listen( "onSort = #modelHeader" )
+   public void sortModel() {
+      System.out.println();
    }
 
    /**
@@ -178,7 +171,7 @@ public class SearchController extends SelectorComposer< Component > {
     */
    @Listen( "onClick = #addCarButton" )
    public void addCar() {
-      extractCurrentModel().ifPresent( ListModelList::clearSelection );
+      listModelOperations.extractCurrentModel( carListbox ).ifPresent( ListModelList::clearSelection );
       editSelection();
    }
 
@@ -187,8 +180,8 @@ public class SearchController extends SelectorComposer< Component > {
     */
    @Listen( "onClick = #deleteSelectionButton" )
    public void deleteSelection() {
-      Optional< Car > currentSelection = extractCurrentModel()
-            .flatMap( this::retrieveCurrentSelection );
+      Optional< Car > currentSelection = listModelOperations.extractCurrentModel( carListbox )
+            .flatMap( listModelOperations::retrieveCurrentSelection );
 
       if ( !currentSelection.isPresent() ) {
          messages.information( "Cannot delete selection as nothing is selected.", "Car Deletion" );
@@ -214,13 +207,13 @@ public class SearchController extends SelectorComposer< Component > {
       }
 
       carService.remove( car );
-      expectModel().remove( car );
+      listModelOperations.expectModel( carListbox ).remove( car );
       showDetailForCurrentSelection();
    }
 
    @Listen( "onClick = #editSelectionButton" )
    public void editSelection() {
-      Optional< Integer > carId = retrieveCurrentSelection( expectModel() )
+      Optional< Integer > carId = listModelOperations.retrieveCurrentSelection( carListbox )
             .map( Car::getId );
       if ( carId.isPresent() ) {
          pageRedirect.redirectTo(
@@ -273,5 +266,9 @@ public class SearchController extends SelectorComposer< Component > {
 
    void setPriceLabel( Label priceLabel ) {
       this.priceLabel = priceLabel;
+   }
+
+   void setPagingCheckBox( Checkbox pagingCheckBox ) {
+      this.pagingCheckBox = pagingCheckBox;
    }
 }

@@ -67,6 +67,8 @@ public class SearchControllerTest {
    private Image previewImage;
    @Mock
    private Component detailBox;
+   @Mock
+   private Checkbox pagingCheckBox;
 
    @Mock
    private CarService carService;
@@ -74,11 +76,13 @@ public class SearchControllerTest {
    private PageRedirect pageRedirect;
    @Mock
    private Messages messages;
+   @Mock
+   private ListPaging listPaging;
    private SearchController systemUnderTest;
 
    @BeforeEach
    public void initialiseSystemUnderTest() {
-      systemUnderTest = new SearchController( pageRedirect, messages );
+      systemUnderTest = new SearchController( pageRedirect, messages, listPaging );
 
       systemUnderTest.setCarService( carService );
       systemUnderTest.setKeywordBox( keywordBox );
@@ -89,6 +93,7 @@ public class SearchControllerTest {
       systemUnderTest.setDescriptionLabel( descriptionLabel );
       systemUnderTest.setPreviewImage( previewImage );
       systemUnderTest.setDetailBox( detailBox );
+      systemUnderTest.setPagingCheckBox( pagingCheckBox );
    }
 
    @Test
@@ -199,6 +204,18 @@ public class SearchControllerTest {
       );
 
       verify( carService, never() ).remove( any() );
+   }
+
+   @Test
+   public void shouldConfigurePagingAfterCompose() throws Exception {
+      systemUnderTest.doAfterCompose( mock( Component.class ) );
+      verify( listPaging ).configurePagingComponentsAfterCompose( carListbox, pagingCheckBox );
+   }
+
+   @Test
+   public void shouldConfigurePagingInResponseToCheck() {
+      systemUnderTest.pagingModeChanged();
+      verify( listPaging ).configurePagingInResponseToCheck( carListbox, pagingCheckBox );
    }
 
    @Nested

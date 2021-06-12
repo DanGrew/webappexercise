@@ -5,10 +5,7 @@
             Keyword:
             <textbox id="keywordBox"/>
             <button id="searchButton" label="Search" iconSclass="z-icon-search"/>
-            <checkbox label="Paging" checked="true">
-                <attribute name="onCheck"><![CDATA[
-                carListbox.mold = "paging".equals(carListbox.mold) ? "" : "paging";
-            ]]></attribute>
+            <checkbox id="pagingCheckBox" label="Paging" checked="true">
             </checkbox>
         </hbox>
         <hbox pack="end" hflex="1">
@@ -35,7 +32,8 @@
     <listbox id="carListbox" emptyMessage="No car found in the result" style="margin-top:10px"
              mold="paging" pageSize="5">
         <listhead>
-            <listheader label="Model" sortAscending="${modelComparatorAsc}" sortDescending="${modelComparatorDesc}"/>
+            <listheader id="modelHeader" label="Model" sortAscending="${modelComparatorAsc}"
+                        sortDescending="${modelComparatorDesc}"/>
             <listheader label="Make" sortAscending="${makeComparatorAsc}" sortDescending="${makeComparatorDesc}"/>
             <listheader label="Colour" sortAscending="${colourComparatorAsc}" sortDescending="${colourComparatorDesc}"/>
             <listheader label="Price" width="20%" sortAscending="${priceComparatorAsc}"
