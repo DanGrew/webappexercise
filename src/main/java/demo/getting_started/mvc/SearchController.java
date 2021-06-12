@@ -1,24 +1,29 @@
 package demo.getting_started.mvc;
 
 
-import java.util.*;
-
+import demo.getting_started.beans.BeanResolver;
+import demo.getting_started.model.services.CarService;
+import demo.getting_started.model.structures.Car;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
+import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.*;
 
-import demo.getting_started.model.structures.Car;
-import demo.getting_started.model.services.CarService;
-import demo.getting_started.model.services.CarServiceImpl;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Collections.singleton;
 
 /**
  * Provides the controls for searching data and providing results.
  */
+@VariableResolver( { BeanResolver.class } )
 public class SearchController extends SelectorComposer< Component > {
 
    private static final long serialVersionUID = 1L;
@@ -40,22 +45,8 @@ public class SearchController extends SelectorComposer< Component > {
    @Wire
    private Component detailBox;
 
-   private final CarService carService;
-
-   /**
-    * Constructs a new {@link SearchController}.
-    */
-   public SearchController() {
-      this( new CarServiceImpl() );
-   }
-
-   /**
-    * Constructs a new {@link SearchController}.
-    * @param carService for data access.
-    */
-   SearchController( CarService carService ) {
-      this.carService = carService;
-   }
+   @WireVariable
+   private CarService carService;
 
    /**
     * Performs a search through car data based on the input in the keyword box.
@@ -163,7 +154,7 @@ public class SearchController extends SelectorComposer< Component > {
 
    @Listen( "onClick = #addCarButton" )
    public void addCar() {
-      Executions.sendRedirect( ApplicationPages.EDIT_CARS_PAGE.pageName() );
+      Executions.sendRedirect( ApplicationPage.EDIT_CARS_PAGE.pageName() );
    }
 
    /*
@@ -172,6 +163,10 @@ public class SearchController extends SelectorComposer< Component > {
     * this thus far. Mockito is capable of these types of things so this should be able to be
     * improved.
     */
+
+   void setCarService( CarService carService ) {
+      this.carService = carService;
+   }
 
    void setCarListbox( Listbox carListbox ) {
       this.carListbox = carListbox;

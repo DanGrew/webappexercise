@@ -1,7 +1,5 @@
 package demo.getting_started.model.structures;
 
-import javafx.scene.paint.Color;
-
 public class Car {
 
    private Integer id;

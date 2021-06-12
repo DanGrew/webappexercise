@@ -29,7 +29,7 @@
                     </row>
                     <row>
                         <label id="priceLabel" value="Price"/>
-                        <intbox id="priceIntbox" constraint="no empty"/>
+                        <intbox id="priceIntBox" constraint="no empty"/>
                     </row>
                     <row>
                         <label id="colourNameLabel" value="Colour Name"/>
@@ -44,5 +44,8 @@
         </panelchildren>
     </panel>
 
+    <hbox width="100%" pack="end">
+        <button id="submitButton" label="Submit"/>
+    </hbox>
 
 </window>

@@ -68,8 +68,9 @@ public class SearchControllerTest {
 
    @BeforeEach
    public void initialiseSystemUnderTest() {
-      systemUnderTest = new SearchController( carService );
+      systemUnderTest = new SearchController();
 
+      systemUnderTest.setCarService( carService );
       systemUnderTest.setKeywordBox( keywordBox );
       systemUnderTest.setCarListbox( carListbox );
       systemUnderTest.setModelLabel( modelLabel );
@@ -152,11 +153,11 @@ public class SearchControllerTest {
 
       systemUnderTest.showDetailForCurrentSelection();
       verify( detailBox ).setVisible( true );
-      verify( previewImage ).setSrc(selected.getPreview());
-      verify( modelLabel ).setValue(selected.getModel());
-      verify( makeLabel ).setValue(selected.getMake());
-      verify( priceLabel ).setValue("20000");
-      verify( descriptionLabel ).setValue(selected.getDescription());
+      verify( previewImage ).setSrc( selected.getPreview() );
+      verify( modelLabel ).setValue( selected.getModel() );
+      verify( makeLabel ).setValue( selected.getMake() );
+      verify( priceLabel ).setValue( "20000" );
+      verify( descriptionLabel ).setValue( selected.getDescription() );
    }
 
    @Test
