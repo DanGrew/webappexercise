@@ -15,7 +15,9 @@
 package demo.getting_started.mvc;
 
 import demo.getting_started.model.services.CarService;
+import demo.getting_started.model.structures.Car;
 import demo.getting_started.model.structures.SortableColour;
+import demo.getting_started.utility.ExecutionsHandle;
 import demo.getting_started.utility.Messages;
 import demo.getting_started.utility.PageRedirect;
 import javafx.scene.paint.Color;
@@ -24,10 +26,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zkex.zul.Colorbox;
 import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Textbox;
 
+import java.util.Optional;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith( MockitoExtension.class )
@@ -37,6 +44,8 @@ public class CarEditControllerTest {
    private PageRedirect pageRedirect;
    @Mock
    private Messages messages;
+   @Mock
+   private ExecutionsHandle executionsHandle;
 
    @Mock
    private CarService carService;
@@ -59,7 +68,7 @@ public class CarEditControllerTest {
 
    @BeforeEach
    public void initialiseSystemUnderTest() {
-      systemUnderTest = new CarEditController( pageRedirect, messages );
+      systemUnderTest = new CarEditController( pageRedirect, messages, executionsHandle );
 
       systemUnderTest.setCarService( carService );
       systemUnderTest.setColourChooserBox( colourChooserBox );
@@ -187,15 +196,60 @@ public class CarEditControllerTest {
 
    @Test
    public void shouldCreateCarForValidInputAndReturn() {
+      Car car = new Car();
+      when( carService.create() ).thenReturn( car );
+
       systemUnderTest.submitCarEdit();
-      verify( carService ).create(
-            modelTextBox.getValue(),
-            makeTextBox.getValue(),
-            descriptionTextBox.getValue(),
-            previewTextBox.getValue(),
-            priceIntBox.getValue(),
-            new SortableColour( colourChooserBox.getValue(), colourNameTextBox.getValue() )
-      );
+      assertThatCarHasUiMatchingInformation( car );
       verify( pageRedirect ).redirectTo( ApplicationPage.DEMO_PAGE );
+   }
+
+   @Test
+   public void shouldCreateCarForWhenInvalidParameter() throws Exception {
+      when( executionsHandle.retrieveParameter( "id" ) ).thenReturn( "anything" );
+      Car car = new Car();
+      when( carService.create() ).thenReturn( car );
+
+      systemUnderTest.doAfterCompose( mock( Component.class ) );
+      systemUnderTest.submitCarEdit();
+      assertThatCarHasUiMatchingInformation( car );
+      verify( pageRedirect ).redirectTo( ApplicationPage.DEMO_PAGE );
+   }
+
+   @Test
+   public void shouldCreateCarForWhenNoParameter() throws Exception {
+      when( executionsHandle.retrieveParameter( "id" ) ).thenReturn( null );
+      Car car = new Car();
+      when( carService.create() ).thenReturn( car );
+
+      systemUnderTest.doAfterCompose( mock( Component.class ) );
+      systemUnderTest.submitCarEdit();
+      assertThatCarHasUiMatchingInformation( car );
+      verify( pageRedirect ).redirectTo( ApplicationPage.DEMO_PAGE );
+   }
+
+   @Test
+   public void shouldUpdateExistingCarForValidInputAndReturn() throws Exception {
+      when( executionsHandle.retrieveParameter( "id" ) ).thenReturn( "2" );
+      Car car = new Car(
+            2, "empty", "empty", "empty", "empty", 2000,
+            new SortableColour( Color.PINK.toString(), "Pink" )
+      );
+      when( carService.find( 2 ) ).thenReturn( Optional.of( car ) );
+
+      systemUnderTest.doAfterCompose( mock( Component.class ) );
+      systemUnderTest.submitCarEdit();
+      assertThatCarHasUiMatchingInformation( car );
+      verify( pageRedirect ).redirectTo( ApplicationPage.DEMO_PAGE );
+   }
+
+   private void assertThatCarHasUiMatchingInformation( Car car ) {
+      assertThat( car.getModel(), equalTo( modelTextBox.getValue() ) );
+      assertThat( car.getMake(), equalTo( makeTextBox.getValue() ) );
+      assertThat( car.getPreview(), equalTo( previewTextBox.getValue() ) );
+      assertThat( car.getDescription(), equalTo( descriptionTextBox.getValue() ) );
+      assertThat( car.getPreview(), equalTo( previewTextBox.getValue() ) );
+      assertThat( car.getColour(), equalTo(
+            new SortableColour( colourChooserBox.getValue(), colourNameTextBox.getValue() ) ) );
    }
 }

@@ -30,6 +30,8 @@ public class SearchController extends SelectorComposer< Component > {
 
    private static final long serialVersionUID = 1L;
 
+   private static final String CAR_ID_PARAMETER_FORMAT = "id=%d";
+
    @Wire
    private Textbox keywordBox;
    @Wire
@@ -186,8 +188,7 @@ public class SearchController extends SelectorComposer< Component > {
    @Listen( "onClick = #deleteSelectionButton" )
    public void deleteSelection() {
       Optional< Car > currentSelection = extractCurrentModel()
-            .map( this::retrieveCurrentSelection )
-            .orElse( Optional.empty() );
+            .flatMap( this::retrieveCurrentSelection );
 
       if ( !currentSelection.isPresent() ) {
          messages.information( "Cannot delete selection as nothing is selected.", "Car Deletion" );
@@ -205,7 +206,7 @@ public class SearchController extends SelectorComposer< Component > {
    /**
     * Completes the deletion request when the user responds to prompt.
     * @param event indicating the response.
-    * @param car that was selected when the delete was requested.
+    * @param car   that was selected when the delete was requested.
     */
    private void completeDeletion( Event event, Car car ) {
       if ( !event.getName().equals( "onOK" ) ) {
@@ -214,11 +215,21 @@ public class SearchController extends SelectorComposer< Component > {
 
       carService.remove( car );
       expectModel().remove( car );
+      showDetailForCurrentSelection();
    }
 
    @Listen( "onClick = #editSelectionButton" )
    public void editSelection() {
-      pageRedirect.redirectTo( ApplicationPage.EDIT_CARS_PAGE );
+      Optional< Integer > carId = retrieveCurrentSelection( expectModel() )
+            .map( Car::getId );
+      if ( carId.isPresent() ) {
+         pageRedirect.redirectTo(
+               ApplicationPage.EDIT_CARS_PAGE,
+               String.format( CAR_ID_PARAMETER_FORMAT, carId.get() )
+         );
+      } else {
+         pageRedirect.redirectTo( ApplicationPage.EDIT_CARS_PAGE );
+      }
    }
 
    /*

@@ -40,13 +40,21 @@ public class CarServiceImplTest {
    }
 
    @Test
+   public void shouldAddNewCarWithNoInformation() {
+      Car returned = systemUnderTest.create();
+      Car newlyAdded = systemUnderTest.findAll().get( systemUnderTest.findAll().size() - 1 );
+      assertThat( returned, equalTo( newlyAdded ) );
+   }
+
+   @Test
    public void shouldAddNewCar() {
-      systemUnderTest.create(
+      Car returned = systemUnderTest.create(
             "new model", "new make", "new description", "new preview",
             394873987, new SortableColour( Color.WHITE.toString(), "White" )
       );
 
       Car newlyAdded = systemUnderTest.findAll().get( systemUnderTest.findAll().size() - 1 );
+      assertThat( returned, equalTo( newlyAdded ) );
       assertThat( newlyAdded.getMake(), equalTo( "new make" ) );
       assertThat( newlyAdded.getModel(), equalTo( "new model" ) );
       assertThat( newlyAdded.getDescription(), equalTo( "new description" ) );

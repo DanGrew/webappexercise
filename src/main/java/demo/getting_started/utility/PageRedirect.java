@@ -16,4 +16,13 @@ public class PageRedirect {
    public void redirectTo( ApplicationPage page ) {
       Executions.sendRedirect( page.pageName() );
    }
+
+   /**
+    * Redirects to the given page.
+    * @param page      to redirect to.
+    * @param parameter the precise format of the parameter, typically in the form of "id=45".
+    */
+   public void redirectTo( ApplicationPage page, String parameter ) {
+      Executions.sendRedirect( String.format( "%s?%s", page.pageName(), parameter ) );
+   }
 }

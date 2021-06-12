@@ -3,16 +3,13 @@ package demo.getting_started.model.services;
 import demo.getting_started.model.structures.Car;
 import demo.getting_started.model.structures.SortableColour;
 import javafx.scene.paint.Color;
-import org.zkoss.zk.ui.select.annotation.VariableResolver;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class CarServiceImpl implements CarService {
 
    //data model
-   private final List< Car > carList;
+   private final Map< Integer, Car > cars;
    private final CarSearch carSearch;
 
    private int id = 1;
@@ -22,34 +19,46 @@ public class CarServiceImpl implements CarService {
     */
    public CarServiceImpl() {
       this.carSearch = new CarSearch();
-      this.carList = new ArrayList<>();
+      this.cars = new LinkedHashMap<>();
 
       populateTestData();
    }
 
    @Override
-   public void create(
+   public Car create() {
+      return create( null, null, null, null, null, null );
+   }
+
+   @Override
+   public Car create(
          String model, String make, String description, String preview,
          Integer price, SortableColour sortableColour
    ) {
-      carList.add(
-            new Car( id++, model, make, description, preview, price, sortableColour ) );
+      int id = this.id++;
+      Car car = new Car( id, model, make, description, preview, price, sortableColour );
+      cars.put( id, car );
+      return car;
    }
 
    @Override
    public void remove( Car car ) {
-      carList.remove( car );
+      cars.remove( car.getId() );
+   }
+
+   @Override
+   public Optional< Car > find( Integer id ) {
+      return Optional.ofNullable( cars.get( id ) );
    }
 
    @Override
    public List< Car > findAll() {
-      return carList;
+      return new ArrayList<>( cars.values() );
    }
 
    @Override
    public List< Car > search( String keyword ) {
       return carSearch.search(
-            Collections.unmodifiableList( carList ),
+            findAll(),
             keyword
       );
    }

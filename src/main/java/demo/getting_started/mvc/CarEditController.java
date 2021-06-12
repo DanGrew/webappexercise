@@ -2,10 +2,11 @@ package demo.getting_started.mvc;
 
 import demo.getting_started.beans.BeanResolver;
 import demo.getting_started.model.services.CarService;
+import demo.getting_started.model.structures.Car;
 import demo.getting_started.model.structures.SortableColour;
+import demo.getting_started.utility.ExecutionsHandle;
 import demo.getting_started.utility.Messages;
 import demo.getting_started.utility.PageRedirect;
-import javafx.scene.paint.Color;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
@@ -49,12 +50,15 @@ public class CarEditController extends SelectorComposer< Component > {
 
    private final PageRedirect pageRedirect;
    private final Messages messages;
+   private final ExecutionsHandle executionsHandle;
+
+   private Optional< Car > currentlySelectedCar;
 
    /**
     * Constructs a new {@link CarEditController}.
     */
    public CarEditController() {
-      this( new PageRedirect(), new Messages() );
+      this( new PageRedirect(), new Messages(), new ExecutionsHandle() );
    }
 
    /**
@@ -62,9 +66,37 @@ public class CarEditController extends SelectorComposer< Component > {
     * @param pageRedirect for navigating pages.
     * @param messages     for user information.
     */
-   CarEditController( PageRedirect pageRedirect, Messages messages ) {
+   CarEditController(
+         PageRedirect pageRedirect, Messages messages,
+         ExecutionsHandle executionsHandle
+   ) {
       this.pageRedirect = pageRedirect;
       this.messages = messages;
+      this.executionsHandle = executionsHandle;
+      this.currentlySelectedCar = Optional.empty();
+   }
+
+   @Override
+   public void doAfterCompose( Component comp ) throws Exception {
+      super.doAfterCompose( comp );
+      String parameter = executionsHandle.retrieveParameter( "id" );
+      currentlySelectedCar = attemptSelectionParameterParse( parameter )
+            .flatMap( carService::find );
+      currentlySelectedCar.ifPresent( this::populateForSelection );
+   }
+
+   /**
+    * Attempts to retrieve an optional parameter representing the id of the car to edit.
+    * @param parameter id of the car.
+    * @return the parsed parameter or empty if not valid.
+    */
+   private Optional< Integer > attemptSelectionParameterParse( String parameter ) {
+      try {
+         return Optional.of( Integer.parseInt( parameter ) );
+      } catch ( NumberFormatException exception ) {
+         //should log in some way - could be coding error or could be curious user...
+         return Optional.empty();
+      }
    }
 
    @Listen( "onClick = #returnToDemoButton" )
@@ -101,16 +133,30 @@ public class CarEditController extends SelectorComposer< Component > {
          return;
       }
 
-      carService.create(
-            modelTextBox.getValue(),
-            makeTextBox.getValue(),
-            descriptionTextBox.getValue(),
-            previewTextBox.getValue(),
-            priceIntBox.getValue(),
-            new SortableColour( colourChooserBox.getValue(), colourNameTextBox.getValue() )
-      );
+      Car carToUpdate = currentlySelectedCar.orElseGet( carService::create );
+      carToUpdate.setModel( modelTextBox.getValue() );
+      carToUpdate.setMake( makeTextBox.getValue() );
+      carToUpdate.setPreview( previewTextBox.getValue() );
+      carToUpdate.setDescription( descriptionTextBox.getValue() );
+      carToUpdate.setPrice( priceIntBox.getValue() );
+      carToUpdate.setColour(
+            new SortableColour( colourChooserBox.getValue(), colourNameTextBox.getValue() ) );
 
       returnToDemo();
+   }
+
+   /**
+    * Populates the ui with information from the currently selected car.
+    * @param currentSelection to update the ui with.
+    */
+   private void populateForSelection( Car currentSelection ) {
+      modelTextBox.setValue( currentSelection.getModel() );
+      makeTextBox.setValue( currentSelection.getMake() );
+      previewTextBox.setValue( currentSelection.getPreview() );
+      descriptionTextBox.setValue( currentSelection.getDescription() );
+      priceIntBox.setValue( currentSelection.getPrice() );
+      colourNameTextBox.setValue( currentSelection.getColour().getColourDisplayName() );
+      colourChooserBox.setValue( currentSelection.getColour().getColour() );
    }
 
    /**

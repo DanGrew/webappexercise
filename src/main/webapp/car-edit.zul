@@ -13,31 +13,32 @@
                 <rows>
                     <row>
                         <label id="modelLabel" value="Model"/>
-                        <textbox id="modelTextBox" constraint="no empty"/>
+                        <textbox id="modelTextBox" constraint="no empty" width="100%"/>
                     </row>
                     <row>
                         <label id="makeLabel" value="Make"/>
-                        <textbox id="makeTextBox" constraint="no empty"/>
+                        <textbox id="makeTextBox" constraint="no empty" width="100%"/>
                     </row>
                     <row>
-                        <label id="previewLabel" value="Preview"/>
-                        <textbox id="previewTextBox" constraint="no empty"/>
+                        <label id="previewLabel" value="Preview" width="100%"/>
+                        <textbox id="previewTextBox" constraint="no empty" width="100%"/>
                     </row>
                     <row>
                         <label id="descriptionLabel" value="Description"/>
-                        <textbox id="descriptionTextBox" constraint="no empty"/>
+                        <textbox id="descriptionTextBox" constraint="no empty" multiline="true" height="100px"
+                                 width="100%"/>
                     </row>
                     <row>
                         <label id="priceLabel" value="Price"/>
-                        <intbox id="priceIntBox" constraint="no empty"/>
+                        <intbox id="priceIntBox" constraint="no empty" width="100%"/>
                     </row>
                     <row>
                         <label id="colourNameLabel" value="Colour Name"/>
-                        <textbox id="colourNameTextBox" constraint="no empty"/>
+                        <textbox id="colourNameTextBox" constraint="no empty" width="100%"/>
                     </row>
                     <row>
                         <label id="colourChooserLabel" value="Colour"/>
-                        <colorbox id="colourChooserBox"/>
+                        <colorbox id="colourChooserBox" width="100%"/>
                     </row>
                 </rows>
             </grid>

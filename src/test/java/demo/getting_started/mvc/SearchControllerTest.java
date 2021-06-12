@@ -243,6 +243,7 @@ public class SearchControllerTest {
 
          eventListenerCaptor.getValue().onEvent( new Event( "onOK" ) );
          verify( carService ).remove( selected );
+         verify( detailBox ).setVisible( false );
       }
 
       @Test
@@ -259,6 +260,12 @@ public class SearchControllerTest {
 
          eventListenerCaptor.getValue().onEvent( new Event( "anything" ) );
          verify( carService, never() ).remove( selected );
+      }
+
+      @Test
+      public void shouldProvideParameterWhenEditingSelection() {
+         systemUnderTest.editSelection();
+         verify( pageRedirect ).redirectTo( ApplicationPage.EDIT_CARS_PAGE, "id=21" );
       }
    }
 }
