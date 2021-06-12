@@ -1,13 +1,48 @@
 <window title="Car Editing" width="100%" height="100%" border="normal"
         apply="demo.getting_started.mvc.CarEditController">
     <hbox align="center" width="100%">
-        Welcome to the edit page!
-        <hbox pack="start">
-            <button id="testMeButton" label="Click Me!"/>
-        </hbox>
+        Welcome to the car editing page. Please complete the following form and submit to update the car database.
         <hbox pack="end" hflex="1">
             <button id="returnToDemoButton" label="Back to Demo"/>
         </hbox>
-
     </hbox>
+
+    <panel title="New Car" maximizable="true" border="normal" style="margin-bottom:10px">
+        <panelchildren>
+            <grid fixedLayout="true" style="border:0px" height="100%">
+                <rows>
+                    <row>
+                        <label id="modelLabel" value="Model"/>
+                        <textbox id="modelTextBox" constraint="no empty"/>
+                    </row>
+                    <row>
+                        <label id="makeLabel" value="Make"/>
+                        <textbox id="makeTextBox" constraint="no empty"/>
+                    </row>
+                    <row>
+                        <label id="previewLabel" value="Preview"/>
+                        <textbox id="previewTextBox" constraint="no empty"/>
+                    </row>
+                    <row>
+                        <label id="descriptionLabel" value="Description"/>
+                        <textbox id="descriptionTextBox" constraint="no empty"/>
+                    </row>
+                    <row>
+                        <label id="priceLabel" value="Price"/>
+                        <intbox id="priceIntbox" constraint="no empty"/>
+                    </row>
+                    <row>
+                        <label id="colourNameLabel" value="Colour Name"/>
+                        <textbox id="colourNameTextBox" constraint="no empty"/>
+                    </row>
+                    <row>
+                        <label id="colourChooserLabel" value="Colour"/>
+                        <colorbox id="colourChooserBox"/>
+                    </row>
+                </rows>
+            </grid>
+        </panelchildren>
+    </panel>
+
+
 </window>
