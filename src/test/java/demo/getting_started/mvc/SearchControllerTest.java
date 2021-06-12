@@ -17,6 +17,8 @@ package demo.getting_started.mvc;
 import demo.getting_started.model.services.CarService;
 import demo.getting_started.model.structures.Car;
 import demo.getting_started.model.structures.SortableColour;
+import demo.getting_started.utility.Messages;
+import demo.getting_started.utility.PageRedirect;
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,11 +66,13 @@ public class SearchControllerTest {
 
    @Mock
    private CarService carService;
+   @Mock
+   private PageRedirect pageRedirect;
    private SearchController systemUnderTest;
 
    @BeforeEach
    public void initialiseSystemUnderTest() {
-      systemUnderTest = new SearchController();
+      systemUnderTest = new SearchController(pageRedirect);
 
       systemUnderTest.setCarService( carService );
       systemUnderTest.setKeywordBox( keywordBox );
@@ -188,4 +192,9 @@ public class SearchControllerTest {
       assertThat( modelCaptor.getValue().getInnerList(), equalTo( searchResult ) );
    }
 
+   @Test
+   public void shouldRedirectToEditPageForAddingCar() {
+      systemUnderTest.addCar();
+      verify( pageRedirect ).redirectTo( ApplicationPage.EDIT_CARS_PAGE );
+   }
 }

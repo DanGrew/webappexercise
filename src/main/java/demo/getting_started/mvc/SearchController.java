@@ -4,8 +4,8 @@ package demo.getting_started.mvc;
 import demo.getting_started.beans.BeanResolver;
 import demo.getting_started.model.services.CarService;
 import demo.getting_started.model.structures.Car;
+import demo.getting_started.utility.PageRedirect;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
@@ -47,6 +47,16 @@ public class SearchController extends SelectorComposer< Component > {
 
    @WireVariable
    private CarService carService;
+
+   private final PageRedirect pageRedirect;
+
+   public SearchController() {
+      this( new PageRedirect() );
+   }
+
+   SearchController( PageRedirect pageRedirect ) {
+      this.pageRedirect = pageRedirect;
+   }
 
    /**
     * Performs a search through car data based on the input in the keyword box.
@@ -152,9 +162,12 @@ public class SearchController extends SelectorComposer< Component > {
       search();
    }
 
+   /**
+    * Redirects to the editing page.
+    */
    @Listen( "onClick = #addCarButton" )
    public void addCar() {
-      Executions.sendRedirect( ApplicationPage.EDIT_CARS_PAGE.pageName() );
+      pageRedirect.redirectTo( ApplicationPage.EDIT_CARS_PAGE );
    }
 
    /*
