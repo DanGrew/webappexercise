@@ -4,6 +4,7 @@ package demo.getting_started.mvc;
 import java.util.*;
 
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
@@ -152,12 +153,17 @@ public class SearchController extends SelectorComposer< Component > {
    }
 
    /**
-    * Called on window load. Provides any initialisation for this controller or default 
+    * Called on window load. Provides any initialisation for this controller or default
     * information to the user.
     */
    @Listen( "onCreate = #carListbox" )
    public void windowLoad() {
       search();
+   }
+
+   @Listen( "onClick = #addCarButton" )
+   public void addCar() {
+      Executions.sendRedirect( ApplicationPages.EDIT_CARS_PAGE.pageName() );
    }
 
    /*
