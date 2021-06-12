@@ -43,7 +43,7 @@
             <listitem>
                 <listcell label="${each.model}"></listcell>
                 <listcell label="${each.make}"></listcell>
-                <listcell label="${each.colour.colourName}"></listcell>
+                <listcell label="${each.colour.colourDisplayName}"></listcell>
                 <listcell>$
                     <label value="${each.price}"/>
                     <attribute name="style" if="${each.price>0}">color: green;</attribute>

@@ -13,6 +13,6 @@ public class ColourComparator extends CarComparator<SortableColour> {
     * Constructs a new {@link ColourComparator}.
     */
    public ColourComparator() {
-      super(Car::getColour, new SortableColour(Color.TRANSPARENT, ""));
+      super(Car::getColour, new SortableColour(Color.TRANSPARENT.toString(), ""));
    }
 }

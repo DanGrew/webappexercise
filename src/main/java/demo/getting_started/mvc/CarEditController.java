@@ -82,7 +82,9 @@ public class CarEditController extends SelectorComposer< Component > {
             validateStringInput( "Make", makeTextBox.getValue() ),
             validateStringInput( "Preview", previewTextBox.getValue() ),
             validateStringInput( "Description", descriptionTextBox.getValue() ),
-            validateIntInput( "Price", priceIntBox.getValue() )
+            validateIntInput( "Price", priceIntBox.getValue() ),
+            validateStringInput( "Colour Name", colourNameTextBox.getValue() ),
+            validateStringInput( "Colour Value", colourChooserBox.getValue() )
       ).stream()
             .filter( Optional::isPresent )
             .map( Optional::get )
@@ -105,7 +107,7 @@ public class CarEditController extends SelectorComposer< Component > {
             descriptionTextBox.getValue(),
             previewTextBox.getValue(),
             priceIntBox.getValue(),
-            new SortableColour( Color.WHITE, colourNameTextBox.getValue() )
+            new SortableColour( colourChooserBox.getValue(), colourNameTextBox.getValue() )
       );
 
       returnToDemo();
@@ -114,7 +116,7 @@ public class CarEditController extends SelectorComposer< Component > {
    /**
     * Common validation performed on string inputs.
     * @param inputName representing what is being validated.
-    * @param input to validate.
+    * @param input     to validate.
     * @return the validation result if negative, otherwise empty.
     */
    private Optional< String > validateStringInput( String inputName, String input ) {
@@ -132,7 +134,7 @@ public class CarEditController extends SelectorComposer< Component > {
    /**
     * Common validation performed on integer inputs.
     * @param inputName representing what is being validated.
-    * @param input to validate.
+    * @param input     to validate.
     * @return the validation result if negative, otherwise empty.
     */
    private Optional< String > validateIntInput( String inputName, Integer input ) {

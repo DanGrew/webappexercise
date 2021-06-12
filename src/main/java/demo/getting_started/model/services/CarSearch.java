@@ -43,7 +43,7 @@ class CarSearch {
          return true;
       }
 
-      if ( car.getColour() != null && car.getColour().getColourName().toLowerCase().contains( searchCriteria.toLowerCase() ) ) {
+      if ( car.getColour() != null && car.getColour().getColourDisplayName().toLowerCase().contains( searchCriteria.toLowerCase() ) ) {
          return true;
       }
 

@@ -141,12 +141,36 @@ public class CarEditControllerTest {
    }
 
    @Test
+   public void shouldHandleInvalidColourName() {
+      when( colourNameTextBox.getValue() ).thenReturn( null );
+      systemUnderTest.submitCarEdit();
+      verify( messages ).information(
+            "Input data is not valid. Please review issues and amend data:\n\n" +
+                  "Colour Name: Value not supplied",
+            "Submit Failure"
+      );
+   }
+
+   @Test
+   public void shouldHandleInvalidColourValue() {
+      when( colourChooserBox.getValue() ).thenReturn( null );
+      systemUnderTest.submitCarEdit();
+      verify( messages ).information(
+            "Input data is not valid. Please review issues and amend data:\n\n" +
+                  "Colour Value: Value not supplied",
+            "Submit Failure"
+      );
+   }
+
+   @Test
    public void shouldHandleMultipleInvalidInputs() {
       when( modelTextBox.getValue() ).thenReturn( null );
       when( makeTextBox.getValue() ).thenReturn( null );
       when( descriptionTextBox.getValue() ).thenReturn( null );
       when( previewTextBox.getValue() ).thenReturn( null );
       when( priceIntBox.getValue() ).thenReturn( -1 );
+      when( colourNameTextBox.getValue() ).thenReturn( null );
+      when( colourChooserBox.getValue() ).thenReturn( null );
       systemUnderTest.submitCarEdit();
       verify( messages ).information(
             "Input data is not valid. Please review issues and amend data:\n\n" +
@@ -154,7 +178,9 @@ public class CarEditControllerTest {
                   "Make: Value not supplied,\n" +
                   "Preview: Value not supplied,\n" +
                   "Description: Value not supplied,\n" +
-                  "Price: Value must be greater than 0",
+                  "Price: Value must be greater than 0,\n" +
+                  "Colour Name: Value not supplied,\n" +
+                  "Colour Value: Value not supplied",
             "Submit Failure"
       );
    }
@@ -168,7 +194,7 @@ public class CarEditControllerTest {
             descriptionTextBox.getValue(),
             previewTextBox.getValue(),
             priceIntBox.getValue(),
-            new SortableColour( Color.WHITE, colourNameTextBox.getValue() )
+            new SortableColour( colourChooserBox.getValue(), colourNameTextBox.getValue() )
       );
       verify( pageRedirect ).redirectTo( ApplicationPage.DEMO_PAGE );
    }

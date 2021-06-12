@@ -38,22 +38,22 @@ public class CarSearchTest {
 
       carsToSearch = asList(
             new Car( null, "Best Model", "Best Make", null, null, null,
-                  new SortableColour( Color.WHITE, "White" )
+                  new SortableColour( Color.WHITE.toString(), "White" )
             ),
             new Car( null, "Worst Model", "Best Make", null, null, null,
-                  new SortableColour( Color.WHITE, "White" )
+                  new SortableColour( Color.WHITE.toString(), "White" )
             ),
             new Car( null, "Best Model", "Worst Make", null, null, null,
-                  new SortableColour( Color.RED, "Red" )
+                  new SortableColour( Color.RED.toString(), "Red" )
             ),
             new Car( null, "Worst Model", "Worst Make", null, null, null,
-                  new SortableColour( Color.BLUE, "Blue" )
+                  new SortableColour( Color.BLUE.toString(), "Blue" )
             ),
             new Car( null, "Best Model", "Mid Range Make", null, null, null,
-                  new SortableColour( Color.GREEN, "Green" )
+                  new SortableColour( Color.GREEN.toString(), "Green" )
             ),
             new Car( null, "Worst Model", "Mid Range Make", null, null, null,
-                  new SortableColour( Color.BLUE, "Blue" )
+                  new SortableColour( Color.BLUE.toString(), "Blue" )
             ),
             new Car( null, null, null, null, null, null, null )
       );

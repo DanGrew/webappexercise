@@ -9,31 +9,31 @@ import java.util.Objects;
  */
 public class SortableColour implements Comparable<SortableColour> {
 
-   private final Color colour;
-   private final String colourName;
+   private final String colour;
+   private final String colourDisplayName;
 
    /**
     * Constructs a new {@link SortableColour}.
     *
     * @param colour     the actual colour.
-    * @param colourName a description for the colour.
+    * @param colourDisplayName a description for the colour.
     */
-   public SortableColour(Color colour, String colourName) {
+   public SortableColour(String colour, String colourDisplayName ) {
       this.colour = Objects.requireNonNull(colour);
-      this.colourName = Objects.requireNonNull(colourName);
+      this.colourDisplayName = Objects.requireNonNull( colourDisplayName );
    }
 
-   public Color getColour() {
+   public String getColour() {
       return colour;
    }
 
-   public String getColourName() {
-      return colourName;
+   public String getColourDisplayName() {
+      return colourDisplayName;
    }
 
    @Override
    public int compareTo(SortableColour o) {
-      return getColourName().compareTo(o.getColourName());
+      return getColourDisplayName().compareTo(o.getColourDisplayName());
    }
 
    @Override
@@ -45,11 +45,11 @@ public class SortableColour implements Comparable<SortableColour> {
          return false;
       }
       SortableColour that = (SortableColour) o;
-      return Objects.equals(colour, that.colour) && Objects.equals(colourName, that.colourName);
+      return Objects.equals(colour, that.colour) && Objects.equals( colourDisplayName, that.colourDisplayName );
    }
 
    @Override
    public int hashCode() {
-      return Objects.hash(colour, colourName);
+      return Objects.hash(colour, colourDisplayName );
    }
 }

@@ -22,23 +22,29 @@ public class ColourComparatorTest {
 
    @Test
    public void shouldSortColourAscending() {
-      Car black = new Car(null, null, null, null, null, null, new SortableColour(Color.BLACK, "Black"));
-      Car white = new Car(null, null, null, null, null, null, new SortableColour(Color.WHITE, "White"));
+      Car black = new Car( null, null, null, null, null, null,
+            new SortableColour( Color.BLACK.toString(), "Black" )
+      );
+      Car white = new Car( null, null, null, null, null, null,
+            new SortableColour( Color.WHITE.toString(), "White" )
+      );
 
-      assertThat(systemUnderTest.compare(black, white), lessThan(0));
-      assertThat(systemUnderTest.compare(white, black), greaterThan(0));
+      assertThat( systemUnderTest.compare( black, white ), lessThan( 0 ) );
+      assertThat( systemUnderTest.compare( white, black ), greaterThan( 0 ) );
 
-      assertThat(systemUnderTest.compare(black, black), equalTo(0));
+      assertThat( systemUnderTest.compare( black, black ), equalTo( 0 ) );
    }
 
    @Test
    public void shouldInterpretNullAsEmptyName() {
-      Car black = new Car(null, null, null, null, null, null, null);
-      Car white = new Car(null, null, null, null, null, null, new SortableColour(Color.WHITE, "White"));
+      Car black = new Car( null, null, null, null, null, null, null );
+      Car white = new Car( null, null, null, null, null, null, new SortableColour(
+            Color.WHITE.toString(), "White"
+      ) );
 
-      assertThat(systemUnderTest.compare(black, white), lessThan(0));
-      assertThat(systemUnderTest.compare(white, black), greaterThan(0));
+      assertThat( systemUnderTest.compare( black, white ), lessThan( 0 ) );
+      assertThat( systemUnderTest.compare( white, black ), greaterThan( 0 ) );
 
-      assertThat(systemUnderTest.compare(black, black), equalTo(0));
+      assertThat( systemUnderTest.compare( black, black ), equalTo( 0 ) );
    }
 }

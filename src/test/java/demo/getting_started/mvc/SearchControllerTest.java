@@ -147,7 +147,7 @@ public class SearchControllerTest {
    @Test
    public void shouldShowDetailWhenSelectionOccurs() {
       Car selected = new Car( 21, "Model", "Make", "Description", "Preview", 20000,
-            new SortableColour( Color.WHITE, "White" )
+            new SortableColour( Color.WHITE.toString(), "White" )
       );
 
       ListModelList< Object > modelList = new ListModelList<>( singleton( selected ) );
@@ -167,7 +167,7 @@ public class SearchControllerTest {
    @Test
    public void shouldHideDetailWhenNoSelectionPresent() {
       Car notSelected = new Car( 21, "Model", "Make", "Description", "Preview", 20000,
-            new SortableColour( Color.WHITE, "White" )
+            new SortableColour( Color.WHITE.toString(), "White" )
       );
 
       ListModelList< Object > modelList = new ListModelList<>( singleton( notSelected ) );
