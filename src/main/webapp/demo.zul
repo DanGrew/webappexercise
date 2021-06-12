@@ -13,6 +13,8 @@
         </hbox>
         <hbox pack="end" hflex="1">
             <button id="addCarButton" label="Add Car"/>
+            <button id="editSelectionButton" label="Edit Selection"/>
+            <button id="deleteSelectionButton" label="Delete Selection"/>
         </hbox>
     </hbox>
     <zscript><![CDATA[

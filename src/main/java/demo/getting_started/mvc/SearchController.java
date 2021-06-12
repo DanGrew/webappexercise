@@ -4,8 +4,10 @@ package demo.getting_started.mvc;
 import demo.getting_started.beans.BeanResolver;
 import demo.getting_started.model.services.CarService;
 import demo.getting_started.model.structures.Car;
+import demo.getting_started.utility.Messages;
 import demo.getting_started.utility.PageRedirect;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
@@ -49,13 +51,15 @@ public class SearchController extends SelectorComposer< Component > {
    private CarService carService;
 
    private final PageRedirect pageRedirect;
+   private final Messages messages;
 
    public SearchController() {
-      this( new PageRedirect() );
+      this( new PageRedirect(), new Messages() );
    }
 
-   SearchController( PageRedirect pageRedirect ) {
+   SearchController( PageRedirect pageRedirect, Messages messages ) {
       this.pageRedirect = pageRedirect;
+      this.messages = messages;
    }
 
    /**
@@ -116,6 +120,11 @@ public class SearchController extends SelectorComposer< Component > {
       descriptionLabel.setValue( selected.getDescription() );
    }
 
+   private ListModelList< Car > expectModel() {
+      return extractCurrentModel()
+            .orElseThrow( () -> new IllegalStateException( "Expected model not present." ) );
+   }
+
    /**
     * Convenience method to retrieve the {@link ListModelList} expected from the car listbox. It
     * is expected that this application only uses {@link ListModelList} however on start up, a
@@ -167,6 +176,48 @@ public class SearchController extends SelectorComposer< Component > {
     */
    @Listen( "onClick = #addCarButton" )
    public void addCar() {
+      extractCurrentModel().ifPresent( ListModelList::clearSelection );
+      editSelection();
+   }
+
+   /**
+    * Deletes the selected car if the user confirms.
+    */
+   @Listen( "onClick = #deleteSelectionButton" )
+   public void deleteSelection() {
+      Optional< Car > currentSelection = extractCurrentModel()
+            .map( this::retrieveCurrentSelection )
+            .orElse( Optional.empty() );
+
+      if ( !currentSelection.isPresent() ) {
+         messages.information( "Cannot delete selection as nothing is selected.", "Car Deletion" );
+         return;
+      }
+
+      String message = "Are you sure you wish to delete the current selection?";
+      String title = "Car Deletion";
+      messages.question( message, title, event -> completeDeletion(
+            event,
+            currentSelection.get()
+      ) );
+   }
+
+   /**
+    * Completes the deletion request when the user responds to prompt.
+    * @param event indicating the response.
+    * @param car that was selected when the delete was requested.
+    */
+   private void completeDeletion( Event event, Car car ) {
+      if ( !event.getName().equals( "onOK" ) ) {
+         return;
+      }
+
+      carService.remove( car );
+      expectModel().remove( car );
+   }
+
+   @Listen( "onClick = #editSelectionButton" )
+   public void editSelection() {
       pageRedirect.redirectTo( ApplicationPage.EDIT_CARS_PAGE );
    }
 

@@ -21,13 +21,17 @@ import demo.getting_started.utility.Messages;
 import demo.getting_started.utility.PageRedirect;
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zul.*;
 
 import java.util.List;
@@ -68,11 +72,13 @@ public class SearchControllerTest {
    private CarService carService;
    @Mock
    private PageRedirect pageRedirect;
+   @Mock
+   private Messages messages;
    private SearchController systemUnderTest;
 
    @BeforeEach
    public void initialiseSystemUnderTest() {
-      systemUnderTest = new SearchController(pageRedirect);
+      systemUnderTest = new SearchController( pageRedirect, messages );
 
       systemUnderTest.setCarService( carService );
       systemUnderTest.setKeywordBox( keywordBox );
@@ -145,26 +151,6 @@ public class SearchControllerTest {
    }
 
    @Test
-   public void shouldShowDetailWhenSelectionOccurs() {
-      Car selected = new Car( 21, "Model", "Make", "Description", "Preview", 20000,
-            new SortableColour( Color.WHITE.toString(), "White" )
-      );
-
-      ListModelList< Object > modelList = new ListModelList<>( singleton( selected ) );
-
-      modelList.setSelection( singleton( selected ) );
-      when( carListbox.getModel() ).thenReturn( modelList );
-
-      systemUnderTest.showDetailForCurrentSelection();
-      verify( detailBox ).setVisible( true );
-      verify( previewImage ).setSrc( selected.getPreview() );
-      verify( modelLabel ).setValue( selected.getModel() );
-      verify( makeLabel ).setValue( selected.getMake() );
-      verify( priceLabel ).setValue( "20000" );
-      verify( descriptionLabel ).setValue( selected.getDescription() );
-   }
-
-   @Test
    public void shouldHideDetailWhenNoSelectionPresent() {
       Car notSelected = new Car( 21, "Model", "Make", "Description", "Preview", 20000,
             new SortableColour( Color.WHITE.toString(), "White" )
@@ -194,7 +180,85 @@ public class SearchControllerTest {
 
    @Test
    public void shouldRedirectToEditPageForAddingCar() {
+      ListModelList< Object > modelList = mock( ListModelList.class );
+      when( carListbox.getModel() ).thenReturn( modelList );
+
       systemUnderTest.addCar();
-      verify( pageRedirect ).redirectTo( ApplicationPage.EDIT_CARS_PAGE );
+      InOrder order = inOrder( modelList, pageRedirect );
+      order.verify( modelList ).clearSelection();
+      order.verify( pageRedirect ).redirectTo( ApplicationPage.EDIT_CARS_PAGE );
+   }
+
+   @Test
+   public void shouldNotDeleteCarIfNoneSelected() {
+      systemUnderTest.deleteSelection();
+
+      verify( messages ).information(
+            "Cannot delete selection as nothing is selected.",
+            "Car Deletion"
+      );
+
+      verify( carService, never() ).remove( any() );
+   }
+
+   @Nested
+   public class SelectionBasedTests {
+
+      private Car selected;
+
+      @BeforeEach
+      public void initialiseTestData() {
+         selected = new Car( 21, "Model", "Make", "Description", "Preview", 20000,
+               new SortableColour( Color.WHITE.toString(), "White" )
+         );
+
+         ListModelList< Object > modelList = new ListModelList<>( singleton( selected ) );
+
+         modelList.setSelection( singleton( selected ) );
+         when( carListbox.getModel() ).thenReturn( modelList );
+      }
+
+      @Test
+      public void shouldShowDetailWhenSelectionOccurs() {
+         systemUnderTest.showDetailForCurrentSelection();
+         verify( detailBox ).setVisible( true );
+         verify( previewImage ).setSrc( selected.getPreview() );
+         verify( modelLabel ).setValue( selected.getModel() );
+         verify( makeLabel ).setValue( selected.getMake() );
+         verify( priceLabel ).setValue( "20000" );
+         verify( descriptionLabel ).setValue( selected.getDescription() );
+      }
+
+      @Test
+      public void shouldDeleteCarWhenInstructed() throws Exception {
+         systemUnderTest.deleteSelection();
+
+         ArgumentCaptor< EventListener< Event > > eventListenerCaptor =
+               ArgumentCaptor.forClass( EventListener.class );
+         verify( messages ).question(
+               eq( "Are you sure you wish to delete the current selection?" ),
+               eq( "Car Deletion" ),
+               eventListenerCaptor.capture()
+         );
+
+         eventListenerCaptor.getValue().onEvent( new Event( "onOK" ) );
+         verify( carService ).remove( selected );
+      }
+
+      @Test
+      public void shouldNotDeleteCarIfCancelled() throws Exception {
+         systemUnderTest.deleteSelection();
+
+         ArgumentCaptor< EventListener< Event > > eventListenerCaptor =
+               ArgumentCaptor.forClass( EventListener.class );
+         verify( messages ).question(
+               eq( "Are you sure you wish to delete the current selection?" ),
+               eq( "Car Deletion" ),
+               eventListenerCaptor.capture()
+         );
+
+         eventListenerCaptor.getValue().onEvent( new Event( "anything" ) );
+         verify( carService, never() ).remove( selected );
+      }
    }
 }

@@ -54,4 +54,11 @@ public class CarServiceImplTest {
       assertThat( newlyAdded.getPrice(), equalTo( 394873987 ) );
    }
 
+   @Test
+   public void shouldRemoveCar() {
+      Car toRemove = systemUnderTest.findAll().get( 0 );
+      systemUnderTest.remove( toRemove );
+      assertThat( systemUnderTest.findAll().contains( toRemove ), equalTo( false ) );
+   }
+
 }

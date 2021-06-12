@@ -17,6 +17,9 @@ public class CarServiceImpl implements CarService {
 
    private int id = 1;
 
+   /**
+    * Constructs a new {@link CarServiceImpl}.
+    */
    public CarServiceImpl() {
       this.carSearch = new CarSearch();
       this.carList = new ArrayList<>();
@@ -33,10 +36,17 @@ public class CarServiceImpl implements CarService {
             new Car( id++, model, make, description, preview, price, sortableColour ) );
    }
 
+   @Override
+   public void remove( Car car ) {
+      carList.remove( car );
+   }
+
+   @Override
    public List< Car > findAll() {
       return carList;
    }
 
+   @Override
    public List< Car > search( String keyword ) {
       return carSearch.search(
             Collections.unmodifiableList( carList ),

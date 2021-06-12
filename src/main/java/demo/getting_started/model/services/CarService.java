@@ -37,4 +37,6 @@ public interface CarService {
          Integer price,
          SortableColour sortableColour
    );
+
+   public void remove( Car car );
 }
