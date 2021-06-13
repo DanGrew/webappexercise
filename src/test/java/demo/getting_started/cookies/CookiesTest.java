@@ -84,7 +84,7 @@ public class CookiesTest {
       when( request.getCookies() ).thenReturn( new Cookie[]{
             new Cookie( Cookies.PAGING_COOKIE_NAME, Boolean.FALSE.toString() ) }
       );
-      
+
       assertThat( systemUnderTest.isPaging(), equalTo( false ) );
    }
 
@@ -99,4 +99,103 @@ public class CookiesTest {
       when( executionsHandle.getNativeRequest() ).thenReturn( new Object() );
       assertThat( systemUnderTest.isPaging(), equalTo( false ) );
    }
+
+   @Test
+   public void shouldGetCookieForModelSorting() {
+      assertThat( systemUnderTest.getModelColumnSorting(), equalTo( Cookies.SORTING_NATURAL ) );
+
+      when( request.getCookies() ).thenReturn( new Cookie[]{
+            new Cookie( Cookies.SORTING_COOKIE, "MODEL-descending" ) }
+      );
+
+      assertThat( systemUnderTest.getModelColumnSorting(), equalTo( Cookies.SORTING_DESCENDING ) );
+
+      when( request.getCookies() ).thenReturn( new Cookie[]{
+            new Cookie( Cookies.SORTING_COOKIE, "MODEL-ascending" ) }
+      );
+
+      assertThat( systemUnderTest.getModelColumnSorting(), equalTo( Cookies.SORTING_ASCENDING ) );
+   }
+
+   @Test
+   public void shouldGetCookieForMakeSorting() {
+      assertThat( systemUnderTest.getMakeColumnSorting(), equalTo( Cookies.SORTING_NATURAL ) );
+
+      when( request.getCookies() ).thenReturn( new Cookie[]{
+            new Cookie( Cookies.SORTING_COOKIE, "MAKE-descending" ) }
+      );
+
+      assertThat( systemUnderTest.getMakeColumnSorting(), equalTo( Cookies.SORTING_DESCENDING ) );
+
+      when( request.getCookies() ).thenReturn( new Cookie[]{
+            new Cookie( Cookies.SORTING_COOKIE, "MAKE-ascending" ) }
+      );
+
+      assertThat( systemUnderTest.getMakeColumnSorting(), equalTo( Cookies.SORTING_ASCENDING ) );
+   }
+
+   @Test
+   public void shouldGetCookieForColourSorting() {
+      assertThat( systemUnderTest.getColourColumnSorting(), equalTo( Cookies.SORTING_NATURAL ) );
+
+      when( request.getCookies() ).thenReturn( new Cookie[]{
+            new Cookie( Cookies.SORTING_COOKIE, "COLOUR-descending" ) }
+      );
+
+      assertThat( systemUnderTest.getColourColumnSorting(), equalTo( Cookies.SORTING_DESCENDING ) );
+
+      when( request.getCookies() ).thenReturn( new Cookie[]{
+            new Cookie( Cookies.SORTING_COOKIE, "COLOUR-ascending" ) }
+      );
+
+      assertThat( systemUnderTest.getColourColumnSorting(), equalTo( Cookies.SORTING_ASCENDING ) );
+   }
+
+   @Test
+   public void shouldGetCookieForPriceSorting() {
+      assertThat( systemUnderTest.getPriceColumnSorting(), equalTo( Cookies.SORTING_NATURAL ) );
+
+      when( request.getCookies() ).thenReturn( new Cookie[]{
+            new Cookie( Cookies.SORTING_COOKIE, "PRICE-descending" ) }
+      );
+
+      assertThat( systemUnderTest.getPriceColumnSorting(), equalTo( Cookies.SORTING_DESCENDING ) );
+
+      when( request.getCookies() ).thenReturn( new Cookie[]{
+            new Cookie( Cookies.SORTING_COOKIE, "PRICE-ascending" ) }
+      );
+
+      assertThat( systemUnderTest.getPriceColumnSorting(), equalTo( Cookies.SORTING_ASCENDING ) );
+   }
+
+   @Test
+   public void shouldGetSortingKeyAndType() {
+      when( request.getCookies() ).thenReturn( new Cookie[]{
+            new Cookie( Cookies.SORTING_COOKIE, "PRICE-descending" ) }
+      );
+
+      assertThat( systemUnderTest.getSortingKey().get(), equalTo( Cookies.PRICE_SORTING_KEY ) );
+      assertThat(
+            systemUnderTest.getSortingDirection().get(),
+            equalTo( Cookies.SORTING_DESCENDING )
+      );
+   }
+
+   @Test
+   public void shouldSupportNoCookie() {
+      when( request.getCookies() ).thenReturn( new Cookie[]{} );
+
+      assertThat( systemUnderTest.getSortingKey().isPresent(), equalTo( false ) );
+      assertThat( systemUnderTest.getSortingDirection().isPresent(), equalTo( false ) );
+   }
+
+   @Test
+   public void shouldConfigureSortingCookie() {
+      systemUnderTest.configureSorting( Cookies.PRICE_SORTING_KEY, Cookies.SORTING_DESCENDING );
+      verify( response ).addCookie( cookieCaptor.capture() );
+
+      assertThat( cookieCaptor.getValue().getName(), equalTo( Cookies.SORTING_COOKIE ) );
+      assertThat( cookieCaptor.getValue().getValue(), equalTo( "PRICE-descending" ) );
+   }
+
 }

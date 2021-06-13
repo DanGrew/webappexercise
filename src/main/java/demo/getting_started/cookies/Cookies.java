@@ -6,6 +6,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.Optional;
+
 import static java.util.Arrays.stream;
 
 /**
@@ -14,6 +16,16 @@ import static java.util.Arrays.stream;
 public class Cookies {
 
    static final String PAGING_COOKIE_NAME = "PAGING";
+   static final String SORTING_COOKIE = "SORTING";
+
+   public static final String SORTING_NATURAL = "natural";
+   public static final String SORTING_ASCENDING = "ascending";
+   public static final String SORTING_DESCENDING = "descending";
+
+   public static final String MODEL_SORTING_KEY = "MODEL";
+   public static final String MAKE_SORTING_KEY = "MAKE";
+   public static final String COLOUR_SORTING_KEY = "COLOUR";
+   public static final String PRICE_SORTING_KEY = "PRICE";
 
    private final ExecutionsHandle executionsHandle;
 
@@ -69,6 +81,83 @@ public class Cookies {
       }
 
       return cookie.equals( Boolean.TRUE.toString() );
+   }
+
+   /**
+    * Provides the current sorting applied to the model column.
+    * @return the sorting applied, as the correct attribute value.
+    */
+   public String getModelColumnSorting() {
+      return getSortingForKey( MODEL_SORTING_KEY );
+   }
+
+   /**
+    * Provides the current sorting applied to the make column.
+    * @return the sorting applied, as the correct attribute value.
+    */
+   public String getMakeColumnSorting() {
+      return getSortingForKey( MAKE_SORTING_KEY );
+   }
+
+   /**
+    * Provides the current sorting applied to the colour column.
+    * @return the sorting applied, as the correct attribute value.
+    */
+   public String getColourColumnSorting() {
+      return getSortingForKey( COLOUR_SORTING_KEY );
+   }
+
+   /**
+    * Provides the current sorting applied to the price column.
+    * @return the sorting applied, as the correct attribute value.
+    */
+   public String getPriceColumnSorting() {
+      return getSortingForKey( PRICE_SORTING_KEY );
+   }
+
+   /**
+    * Calculates the sorting applied for the following key.
+    * @param key representing the column in question.
+    * @return the sorting applied, never null.
+    */
+   private String getSortingForKey( String key ) {
+      String cookieValue = getCookie( SORTING_COOKIE );
+      if ( cookieValue == null ) {
+         return SORTING_NATURAL;
+      }
+      return Optional.ofNullable( cookieValue )
+            .map( SortingCookie::cookieForValue )
+            .map( cookie -> cookie.getSortingForKey( key ) )
+            .orElse( SORTING_NATURAL );
+   }
+
+   /**
+    * Calculates the sorting key, referring to the column being sorted.
+    * @return the key, or empty if no sorted saved in cookies.
+    */
+   public Optional< String > getSortingKey() {
+      return Optional.ofNullable( getCookie( SORTING_COOKIE ) )
+            .map( SortingCookie::cookieForValue )
+            .map( SortingCookie::getKey );
+   }
+
+   /**
+    * Calculates the sorting direction currently applied.
+    * @return the sorting, or empty if no sorted saved in cookies.
+    */
+   public Optional< String > getSortingDirection() {
+      return Optional.ofNullable( getCookie( SORTING_COOKIE ) )
+            .map( SortingCookie::cookieForValue )
+            .map( SortingCookie::getSorting );
+   }
+
+   /**
+    * Configures the sorting in cookies for the given key and sorting direction.
+    * @param key     referring to the column being sorted.
+    * @param sorting direction.
+    */
+   public void configureSorting( String key, String sorting ) {
+      setCookie( SORTING_COOKIE, new SortingCookie( key, sorting ).toValue() );
    }
 
    /**

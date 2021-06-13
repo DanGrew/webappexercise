@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static demo.getting_started.cookies.Cookies.*;
 import static java.util.Collections.singleton;
 
 /**
@@ -37,6 +38,12 @@ public class SearchController extends SelectorComposer< Component > {
    private Listbox carListbox;
    @Wire
    private Listheader modelHeader;
+   @Wire
+   private Listheader makeHeader;
+   @Wire
+   private Listheader colourHeader;
+   @Wire
+   private Listheader priceHeader;
    @Wire
    private Label modelLabel;
    @Wire
@@ -58,13 +65,14 @@ public class SearchController extends SelectorComposer< Component > {
    private final PageRedirect pageRedirect;
    private final Messages messages;
    private final ListPaging listPaging;
+   private final ListSorting listSorting;
    private final ListModelOperations listModelOperations;
 
    /**
     * Constructs a new {@link SearchController}.
     */
    public SearchController() {
-      this( new PageRedirect(), new Messages(), new ListPaging() );
+      this( new PageRedirect(), new Messages(), new ListPaging(), new ListSorting() );
    }
 
    /**
@@ -72,11 +80,18 @@ public class SearchController extends SelectorComposer< Component > {
     * @param pageRedirect for managing page redirection.
     * @param messages     for managing user messages.
     * @param listPaging   for managing list paging.
+    * @param listSorting  for managing sorting.
     */
-   SearchController( PageRedirect pageRedirect, Messages messages, ListPaging listPaging ) {
+   SearchController(
+         PageRedirect pageRedirect,
+         Messages messages,
+         ListPaging listPaging,
+         ListSorting listSorting
+   ) {
       this.pageRedirect = pageRedirect;
       this.messages = messages;
       this.listPaging = listPaging;
+      this.listSorting = listSorting;
       this.listModelOperations = new ListModelOperations();
    }
 
@@ -84,6 +99,9 @@ public class SearchController extends SelectorComposer< Component > {
    public void doAfterCompose( Component comp ) throws Exception {
       super.doAfterCompose( comp );
       listPaging.configurePagingComponentsAfterCompose( carListbox, pagingCheckBox );
+      listSorting.configureSortingAfterCompose(
+            modelHeader, makeHeader, colourHeader, priceHeader
+      );
    }
 
    /**
@@ -98,6 +116,7 @@ public class SearchController extends SelectorComposer< Component > {
       Optional< Car > existingSelection = listModelOperations.extractCurrentModel( carListbox )
             .flatMap( listModelOperations::retrieveCurrentSelection );
 
+      listSorting.sortData( result );
       ListModelList< Car > searchResultModel = new ListModelList<>( result );
       carListbox.setModel( searchResultModel );
 
@@ -152,9 +171,48 @@ public class SearchController extends SelectorComposer< Component > {
       listPaging.configurePagingInResponseToCheck( carListbox, pagingCheckBox );
    }
 
+   /**
+    * Handles sorting applied to the model column.
+    */
    @Listen( "onSort = #modelHeader" )
    public void sortModel() {
-      System.out.println();
+      listSorting.configureSortForDirectionChange(
+            MODEL_SORTING_KEY,
+            modelHeader.getSortDirection()
+      );
+   }
+
+   /**
+    * Handles sorting applied to the make column.
+    */
+   @Listen( "onSort = #makeHeader" )
+   public void sortMake() {
+      listSorting.configureSortForDirectionChange(
+            MAKE_SORTING_KEY,
+            makeHeader.getSortDirection()
+      );
+   }
+
+   /**
+    * Handles sorting applied to the colour column.
+    */
+   @Listen( "onSort = #colourHeader" )
+   public void sortColour() {
+      listSorting.configureSortForDirectionChange(
+            COLOUR_SORTING_KEY,
+            colourHeader.getSortDirection()
+      );
+   }
+
+   /**
+    * Handles sorting applied to the price column.
+    */
+   @Listen( "onSort = #priceHeader" )
+   public void sortPrice() {
+      listSorting.configureSortForDirectionChange(
+            PRICE_SORTING_KEY,
+            priceHeader.getSortDirection()
+      );
    }
 
    /**
@@ -236,8 +294,8 @@ public class SearchController extends SelectorComposer< Component > {
       this.carService = carService;
    }
 
-   void setCarListbox( Listbox carListbox ) {
-      this.carListbox = carListbox;
+   void setCarListbox( Listbox carListBox ) {
+      this.carListbox = carListBox;
    }
 
    void setDescriptionLabel( Label descriptionLabel ) {
@@ -271,4 +329,21 @@ public class SearchController extends SelectorComposer< Component > {
    void setPagingCheckBox( Checkbox pagingCheckBox ) {
       this.pagingCheckBox = pagingCheckBox;
    }
+
+   void setColourHeader( Listheader colourHeader ) {
+      this.colourHeader = colourHeader;
+   }
+
+   void setMakeHeader( Listheader makeHeader ) {
+      this.makeHeader = makeHeader;
+   }
+
+   void setModelHeader( Listheader modelHeader ) {
+      this.modelHeader = modelHeader;
+   }
+
+   void setPriceHeader( Listheader priceHeader ) {
+      this.priceHeader = priceHeader;
+   }
 }
+

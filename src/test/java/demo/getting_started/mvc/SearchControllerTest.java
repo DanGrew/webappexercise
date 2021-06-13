@@ -36,6 +36,7 @@ import org.zkoss.zul.*;
 
 import java.util.List;
 
+import static demo.getting_started.cookies.Cookies.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
@@ -69,6 +70,14 @@ public class SearchControllerTest {
    private Component detailBox;
    @Mock
    private Checkbox pagingCheckBox;
+   @Mock
+   private Listheader modelHeader;
+   @Mock
+   private Listheader makeHeader;
+   @Mock
+   private Listheader colourHeader;
+   @Mock
+   private Listheader priceHeader;
 
    @Mock
    private CarService carService;
@@ -78,11 +87,13 @@ public class SearchControllerTest {
    private Messages messages;
    @Mock
    private ListPaging listPaging;
+   @Mock
+   private ListSorting listSorting;
    private SearchController systemUnderTest;
 
    @BeforeEach
    public void initialiseSystemUnderTest() {
-      systemUnderTest = new SearchController( pageRedirect, messages, listPaging );
+      systemUnderTest = new SearchController( pageRedirect, messages, listPaging, listSorting );
 
       systemUnderTest.setCarService( carService );
       systemUnderTest.setKeywordBox( keywordBox );
@@ -94,6 +105,10 @@ public class SearchControllerTest {
       systemUnderTest.setPreviewImage( previewImage );
       systemUnderTest.setDetailBox( detailBox );
       systemUnderTest.setPagingCheckBox( pagingCheckBox );
+      systemUnderTest.setColourHeader( colourHeader );
+      systemUnderTest.setMakeHeader( makeHeader );
+      systemUnderTest.setModelHeader( modelHeader );
+      systemUnderTest.setPriceHeader( priceHeader );
    }
 
    @Test
@@ -105,7 +120,9 @@ public class SearchControllerTest {
 
       systemUnderTest.search();
 
-      verify( carListbox ).setModel( modelCaptor.capture() );
+      InOrder order = inOrder( listSorting, carListbox );
+      order.verify( listSorting ).sortData( searchResult );
+      order.verify( carListbox ).setModel( modelCaptor.capture() );
       assertThat( modelCaptor.getValue().getInnerList(), equalTo( searchResult ) );
    }
 
@@ -216,6 +233,38 @@ public class SearchControllerTest {
    public void shouldConfigurePagingInResponseToCheck() {
       systemUnderTest.pagingModeChanged();
       verify( listPaging ).configurePagingInResponseToCheck( carListbox, pagingCheckBox );
+   }
+
+   @Test
+   public void shouldConfigureSortingAfterCompose() throws Exception {
+      systemUnderTest.doAfterCompose( mock( Component.class ) );
+      verify( listSorting ).configureSortingAfterCompose(
+            modelHeader, makeHeader, colourHeader, priceHeader
+      );
+   }
+
+   @Test
+   public void shouldConfigureSortingInResponseToSort() {
+      when( modelHeader.getSortDirection() ).thenReturn( SORTING_DESCENDING );
+      when( makeHeader.getSortDirection() ).thenReturn( SORTING_ASCENDING );
+      when( colourHeader.getSortDirection() ).thenReturn( SORTING_NATURAL );
+      when( priceHeader.getSortDirection() ).thenReturn( SORTING_DESCENDING );
+
+      systemUnderTest.sortModel();
+      verify( listSorting ).configureSortForDirectionChange(
+            MODEL_SORTING_KEY, SORTING_DESCENDING );
+      
+      systemUnderTest.sortMake();
+      verify( listSorting ).configureSortForDirectionChange(
+            MAKE_SORTING_KEY, SORTING_ASCENDING );
+      
+      systemUnderTest.sortColour();
+      verify( listSorting ).configureSortForDirectionChange(
+            COLOUR_SORTING_KEY, SORTING_NATURAL );
+      
+      systemUnderTest.sortPrice();
+      verify( listSorting ).configureSortForDirectionChange(
+            PRICE_SORTING_KEY, SORTING_DESCENDING );
    }
 
    @Nested

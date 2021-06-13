@@ -20,6 +20,7 @@
         import demo.getting_started.model.comparator.MakeComparator;
         import demo.getting_started.model.comparator.PriceComparator;
         import demo.getting_started.model.comparator.ColourComparator;
+        import demo.getting_started.cookies.Cookies;
         Comparator modelComparatorAsc = new ModelComparator();
         Comparator modelComparatorDesc = modelComparatorAsc.reversed();
         Comparator makeComparatorAsc = new MakeComparator();
@@ -28,16 +29,19 @@
         Comparator priceComparatorDesc = priceComparatorAsc.reversed();
         Comparator colourComparatorAsc = new ColourComparator();
         Comparator colourComparatorDesc = colourComparatorAsc.reversed();
+        Cookies cookies = new Cookies();
     ]]></zscript>
     <listbox id="carListbox" emptyMessage="No car found in the result" style="margin-top:10px"
              mold="paging" pageSize="5">
         <listhead>
             <listheader id="modelHeader" label="Model" sortAscending="${modelComparatorAsc}"
-                        sortDescending="${modelComparatorDesc}"/>
-            <listheader label="Make" sortAscending="${makeComparatorAsc}" sortDescending="${makeComparatorDesc}"/>
-            <listheader label="Colour" sortAscending="${colourComparatorAsc}" sortDescending="${colourComparatorDesc}"/>
-            <listheader label="Price" width="20%" sortAscending="${priceComparatorAsc}"
-                        sortDescending="${priceComparatorDesc}"/>
+                        sortDescending="${modelComparatorDesc}" sortDirection="${cookies.getModelColumnSorting()}"/>
+            <listheader id="makeHeader" label="Make" sortAscending="${makeComparatorAsc}"
+                        sortDescending="${makeComparatorDesc}" sortDirection="${cookies.getMakeColumnSorting()}"/>
+            <listheader id="colourHeader" label="Colour" sortAscending="${colourComparatorAsc}"
+                        sortDescending="${colourComparatorDesc}" sortDirection="${cookies.getColourColumnSorting()}"/>
+            <listheader id="priceHeader" label="Price" width="20%" sortAscending="${priceComparatorAsc}"
+                        sortDescending="${priceComparatorDesc}" sortDirection="${cookies.getPriceColumnSorting()}"/>
         </listhead>
         <template name="model">
             <listitem>

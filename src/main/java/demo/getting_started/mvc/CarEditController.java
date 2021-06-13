@@ -156,7 +156,7 @@ public class CarEditController extends SelectorComposer< Component > {
       descriptionTextBox.setValue( currentSelection.getDescription() );
       priceIntBox.setValue( currentSelection.getPrice() );
       colourNameTextBox.setValue( currentSelection.getColour().getColourDisplayName() );
-      colourChooserBox.setValue( currentSelection.getColour().getColour() );
+//      colourChooserBox.setValue( currentSelection.getColour().getColour() );
    }
 
    /**
