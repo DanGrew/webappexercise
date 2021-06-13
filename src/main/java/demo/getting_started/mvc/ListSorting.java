@@ -85,13 +85,15 @@ class ListSorting {
          case SORTING_NATURAL:
             currentComparator = null;
             break;
+         default:
+            break;
       }
    }
 
    /**
     * Configures the sorting applied when the sort direction is changed for a particular column.
     * @param key                     referring to the column being sorted.
-    * @param currentSortingDirection the current sorting. This will transition to the next type 
+    * @param currentSortingDirection the current sorting. This will transition to the next type
     *                                of sort: natural -> ascending -> descending -> ascending etc.
     */
    void configureSortForDirectionChange( String key, String currentSortingDirection ) {
@@ -111,6 +113,8 @@ class ListSorting {
             break;
          case SORTING_DESCENDING:
             currentComparator = comparators.get( key ).reversed();
+            break;
+         default:
             break;
       }
    }

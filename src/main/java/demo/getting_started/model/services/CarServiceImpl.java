@@ -34,7 +34,7 @@ public class CarServiceImpl implements CarService {
          String model, String make, String description, String preview,
          Integer price, SortableColour sortableColour
    ) {
-      int id = this.id++;
+      id++;
       Car car = new Car( id, model, make, description, preview, price, sortableColour );
       cars.put( id, car );
       return car;

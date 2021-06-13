@@ -1,6 +1,5 @@
 package demo.getting_started.beans;
 
-import demo.getting_started.model.services.CarService;
 import demo.getting_started.model.services.CarServiceImpl;
 import org.zkoss.xel.VariableResolver;
 import org.zkoss.xel.XelException;
