@@ -38,22 +38,22 @@ public class CarSearchTest {
 
       carsToSearch = asList(
             new Car( null, "Best Model", "Best Make", null, null, null,
-                  new SortableColour( Color.WHITE.toString(), "White" )
+                  new SortableColour( "White" )
             ),
             new Car( null, "Worst Model", "Best Make", null, null, null,
-                  new SortableColour( Color.WHITE.toString(), "White" )
+                  new SortableColour( "White" )
             ),
             new Car( null, "Best Model", "Worst Make", null, null, null,
-                  new SortableColour( Color.RED.toString(), "Red" )
+                  new SortableColour( "Red" )
             ),
             new Car( null, "Worst Model", "Worst Make", null, null, null,
-                  new SortableColour( Color.BLUE.toString(), "Blue" )
+                  new SortableColour( "Blue" )
             ),
             new Car( null, "Best Model", "Mid Range Make", null, null, null,
-                  new SortableColour( Color.GREEN.toString(), "Green" )
+                  new SortableColour( "Green" )
             ),
             new Car( null, "Worst Model", "Mid Range Make", null, null, null,
-                  new SortableColour( Color.BLUE.toString(), "Blue" )
+                  new SortableColour( "Blue" )
             ),
             new Car( null, null, null, null, null, null, null )
       );
@@ -135,10 +135,10 @@ public class CarSearchTest {
             containsInAnyOrder( carsToSearch.get( 3 ), carsToSearch.get( 5 ) )
       );
    }
-   
+
    @Test
    public void shouldProvideAllWhenNoSearchCriteria() {
-      assertThat( systemUnderTest.search( carsToSearch, ""), equalTo( carsToSearch ) );
+      assertThat( systemUnderTest.search( carsToSearch, "" ), equalTo( carsToSearch ) );
    }
 
 }

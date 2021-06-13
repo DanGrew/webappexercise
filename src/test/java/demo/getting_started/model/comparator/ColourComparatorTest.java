@@ -23,10 +23,10 @@ public class ColourComparatorTest {
    @Test
    public void shouldSortColourAscending() {
       Car black = new Car( null, null, null, null, null, null,
-            new SortableColour( Color.BLACK.toString(), "Black" )
+            new SortableColour( "Black" )
       );
       Car white = new Car( null, null, null, null, null, null,
-            new SortableColour( Color.WHITE.toString(), "White" )
+            new SortableColour( "White" )
       );
 
       assertThat( systemUnderTest.compare( black, white ), lessThan( 0 ) );
@@ -38,9 +38,7 @@ public class ColourComparatorTest {
    @Test
    public void shouldInterpretNullAsEmptyName() {
       Car black = new Car( null, null, null, null, null, null, null );
-      Car white = new Car( null, null, null, null, null, null, new SortableColour(
-            Color.WHITE.toString(), "White"
-      ) );
+      Car white = new Car( null, null, null, null, null, null, new SortableColour( "White" ) );
 
       assertThat( systemUnderTest.compare( black, white ), lessThan( 0 ) );
       assertThat( systemUnderTest.compare( white, black ), greaterThan( 0 ) );

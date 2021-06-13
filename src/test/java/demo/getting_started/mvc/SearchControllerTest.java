@@ -190,7 +190,7 @@ public class SearchControllerTest {
    @Test
    public void shouldHideDetailWhenNoSelectionPresent() {
       Car notSelected = new Car( 21, "Model", "Make", "Description", "Preview", 20000,
-            new SortableColour( Color.WHITE.toString(), "White" )
+            new SortableColour( "White" )
       );
 
       ListModelList< Object > modelList = new ListModelList<>( singleton( notSelected ) );
@@ -290,7 +290,7 @@ public class SearchControllerTest {
       @BeforeEach
       public void initialiseTestData() {
          selected = new Car( 21, "Model", "Make", "Description", "Preview", 20000,
-               new SortableColour( Color.WHITE.toString(), "White" )
+               new SortableColour( "White" )
          );
 
          ListModelList< Object > modelList = new ListModelList<>( singleton( selected ) );

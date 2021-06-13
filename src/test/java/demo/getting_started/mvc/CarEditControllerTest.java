@@ -20,14 +20,12 @@ import demo.getting_started.model.structures.SortableColour;
 import demo.getting_started.utility.ExecutionsHandle;
 import demo.getting_started.utility.Messages;
 import demo.getting_started.utility.PageRedirect;
-import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zkex.zul.Colorbox;
 import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Textbox;
 
@@ -61,8 +59,6 @@ public class CarEditControllerTest {
    private Textbox previewTextBox;
    @Mock
    private Textbox colourNameTextBox;
-   @Mock
-   private Colorbox colourChooserBox;
 
    private CarEditController systemUnderTest;
 
@@ -71,7 +67,6 @@ public class CarEditControllerTest {
       systemUnderTest = new CarEditController( pageRedirect, messages, executionsHandle );
 
       systemUnderTest.setCarService( carService );
-      systemUnderTest.setColourChooserBox( colourChooserBox );
       systemUnderTest.setColourNameTextBox( colourNameTextBox );
       systemUnderTest.setDescriptionTextBox( descriptionTextBox );
       systemUnderTest.setMakeTextBox( makeTextBox );
@@ -79,7 +74,6 @@ public class CarEditControllerTest {
       systemUnderTest.setPreviewTextBox( previewTextBox );
       systemUnderTest.setPriceIntBox( priceIntBox );
 
-      lenient().when( colourChooserBox.getValue() ).thenReturn( "any colour" );
       lenient().when( colourNameTextBox.getValue() ).thenReturn( "any colour name" );
       lenient().when( descriptionTextBox.getValue() ).thenReturn( "any description" );
       lenient().when( makeTextBox.getValue() ).thenReturn( "any make" );
@@ -161,17 +155,6 @@ public class CarEditControllerTest {
    }
 
    @Test
-   public void shouldHandleInvalidColourValue() {
-      when( colourChooserBox.getValue() ).thenReturn( null );
-      systemUnderTest.submitCarEdit();
-      verify( messages ).information(
-            "Input data is not valid. Please review issues and amend data:\n\n" +
-                  "Colour Value: Value not supplied",
-            "Submit Failure"
-      );
-   }
-
-   @Test
    public void shouldHandleMultipleInvalidInputs() {
       when( modelTextBox.getValue() ).thenReturn( null );
       when( makeTextBox.getValue() ).thenReturn( null );
@@ -179,7 +162,6 @@ public class CarEditControllerTest {
       when( previewTextBox.getValue() ).thenReturn( null );
       when( priceIntBox.getValue() ).thenReturn( -1 );
       when( colourNameTextBox.getValue() ).thenReturn( null );
-      when( colourChooserBox.getValue() ).thenReturn( null );
       systemUnderTest.submitCarEdit();
       verify( messages ).information(
             "Input data is not valid. Please review issues and amend data:\n\n" +
@@ -188,8 +170,7 @@ public class CarEditControllerTest {
                   "Preview: Value not supplied,\n" +
                   "Description: Value not supplied,\n" +
                   "Price: Value must be greater than 0,\n" +
-                  "Colour Name: Value not supplied,\n" +
-                  "Colour Value: Value not supplied",
+                  "Colour Name: Value not supplied",
             "Submit Failure"
       );
    }
@@ -232,8 +213,7 @@ public class CarEditControllerTest {
    public void shouldUpdateExistingCarForValidInputAndReturn() throws Exception {
       when( executionsHandle.retrieveParameter( "id" ) ).thenReturn( "2" );
       Car car = new Car(
-            2, "empty", "empty", "empty", "empty", 2000,
-            new SortableColour( Color.PINK.toString(), "Pink" )
+            2, "empty", "empty", "empty", "empty", 2000, new SortableColour( "Pink" )
       );
       when( carService.find( 2 ) ).thenReturn( Optional.of( car ) );
 
@@ -250,6 +230,6 @@ public class CarEditControllerTest {
       assertThat( car.getDescription(), equalTo( descriptionTextBox.getValue() ) );
       assertThat( car.getPreview(), equalTo( previewTextBox.getValue() ) );
       assertThat( car.getColour(), equalTo(
-            new SortableColour( colourChooserBox.getValue(), colourNameTextBox.getValue() ) ) );
+            new SortableColour( colourNameTextBox.getValue() ) ) );
    }
 }

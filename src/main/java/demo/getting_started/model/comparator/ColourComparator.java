@@ -2,7 +2,6 @@ package demo.getting_started.model.comparator;
 
 import demo.getting_started.model.structures.Car;
 import demo.getting_started.model.structures.SortableColour;
-import javafx.scene.paint.Color;
 
 /**
  * Concrete implementation of {@link CarComparator} specifically for {@link Car#getColour()}.
@@ -13,6 +12,6 @@ public class ColourComparator extends CarComparator<SortableColour> {
     * Constructs a new {@link ColourComparator}.
     */
    public ColourComparator() {
-      super(Car::getColour, new SortableColour(Color.TRANSPARENT.toString(), ""));
+      super(Car::getColour, new SortableColour(""));
    }
 }

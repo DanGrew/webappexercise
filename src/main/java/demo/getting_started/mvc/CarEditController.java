@@ -13,7 +13,6 @@ import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
-import org.zkoss.zkex.zul.Colorbox;
 import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Textbox;
 
@@ -42,8 +41,6 @@ public class CarEditController extends SelectorComposer< Component > {
    private Textbox previewTextBox;
    @Wire
    private Textbox colourNameTextBox;
-   @Wire
-   private Colorbox colourChooserBox;
 
    @WireVariable
    private CarService carService;
@@ -115,8 +112,7 @@ public class CarEditController extends SelectorComposer< Component > {
             validateStringInput( "Preview", previewTextBox.getValue() ),
             validateStringInput( "Description", descriptionTextBox.getValue() ),
             validateIntInput( "Price", priceIntBox.getValue() ),
-            validateStringInput( "Colour Name", colourNameTextBox.getValue() ),
-            validateStringInput( "Colour Value", colourChooserBox.getValue() )
+            validateStringInput( "Colour Name", colourNameTextBox.getValue() )
       ).stream()
             .filter( Optional::isPresent )
             .map( Optional::get )
@@ -139,8 +135,7 @@ public class CarEditController extends SelectorComposer< Component > {
       carToUpdate.setPreview( previewTextBox.getValue() );
       carToUpdate.setDescription( descriptionTextBox.getValue() );
       carToUpdate.setPrice( priceIntBox.getValue() );
-      carToUpdate.setColour(
-            new SortableColour( colourChooserBox.getValue(), colourNameTextBox.getValue() ) );
+      carToUpdate.setColour( new SortableColour( colourNameTextBox.getValue() ) );
 
       returnToDemo();
    }
@@ -156,7 +151,6 @@ public class CarEditController extends SelectorComposer< Component > {
       descriptionTextBox.setValue( currentSelection.getDescription() );
       priceIntBox.setValue( currentSelection.getPrice() );
       colourNameTextBox.setValue( currentSelection.getColour().getColourDisplayName() );
-//      colourChooserBox.setValue( currentSelection.getColour().getColour() );
    }
 
    /**
@@ -204,10 +198,6 @@ public class CarEditController extends SelectorComposer< Component > {
 
    void setCarService( CarService carService ) {
       this.carService = carService;
-   }
-
-   void setColourChooserBox( Colorbox colourChooserBox ) {
-      this.colourChooserBox = colourChooserBox;
    }
 
    void setColourNameTextBox( Textbox colourNameTextBox ) {

@@ -2,7 +2,6 @@ package demo.getting_started.model.services;
 
 import demo.getting_started.model.structures.Car;
 import demo.getting_started.model.structures.SortableColour;
-import javafx.scene.paint.Color;
 
 import java.util.*;
 
@@ -72,10 +71,7 @@ public class CarServiceImpl implements CarService {
                   "improved 2.2-liter turbodiesel performs well, but is only relatively " +
                   "economical, as it's competitors in this class with similar characteristics " +
                   "offer even lower fuel consumption.",
-            "/widgets/getting_started/img/car1.png", 23320, new SortableColour(
-                  Color.WHITE.toString(),
-                  "White"
-            )
+            "/widgets/getting_started/img/car1.png", 23320, new SortableColour( "White" )
       );
       create( "Cefiro", "Nissan",
             "The Nissan Cefiro is an intermediate-size automobile range sold in Japan and other " +
@@ -86,10 +82,7 @@ public class CarServiceImpl implements CarService {
                   " 200 hp (150 kW). Other variants came with other versions of the Nissan RB " +
                   "engine. Brand new, the Cefiro was slightly more expensive than the equivalent " +
                   "Nissan Skyline.",
-            "/widgets/getting_started/img/car2.png", 38165, new SortableColour(
-                  Color.BLACK.toString(),
-                  "Black"
-            )
+            "/widgets/getting_started/img/car2.png", 38165, new SortableColour( "Black" )
       );
       create( "Camry", "Toyota",
             "The Toyota Camry is a midsize car manufactured by Toyota in Georgetown, Kentucky, " +
@@ -98,10 +91,7 @@ public class CarServiceImpl implements CarService {
                   "though they came from the same factory as the Camry. Since 2000 Daihatsu has " +
                   "sold a Camry twin named the Daihatsu Altis. The name comes from the English " +
                   "phonetic of the Japanese word \"kan-muri,\" which means \"crown.\"",
-            "/widgets/getting_started/img/car3.png", 24170, new SortableColour(
-                  Color.GREEN.toString(),
-                  "Green"
-            )
+            "/widgets/getting_started/img/car3.png", 24170, new SortableColour( "Green" )
       );
       create( "Century", "Toyota",
             "The Toyota Century is a large four-door limousine produced by Toyota mainly for the " +
@@ -115,10 +105,7 @@ public class CarServiceImpl implements CarService {
                   " Maybach or a Rolls Royce), the Century has not been positioned and marketed " +
                   "as a sign of wealth or excess. Instead, the Century projects an image of " +
                   "conservative achievement.",
-            "/widgets/getting_started/img/car4.png", 28730, new SortableColour(
-                  Color.BLACK.toString(),
-                  "Black"
-            )
+            "/widgets/getting_started/img/car4.png", 28730, new SortableColour( "Black" )
       );
       create( "Sigma", "Mitsubishi",
             "The third-generation of Japanese car Mitsubishi Galant, dating from 1976, was " +
@@ -128,8 +115,7 @@ public class CarServiceImpl implements CarService {
                   "Sigma (until 1980, after which it became the Mitsubishi Sigma). Strangely, in " +
                   "New Zealand it was badged as 'Galant Sigma' but colloquially referred to as " +
                   "the 'Sigma', a name it formally adopted after 1980.",
-            "/widgets/getting_started/img/car5.png", 54120,
-            new SortableColour( Color.RED.toString(), "Red" )
+            "/widgets/getting_started/img/car5.png", 54120, new SortableColour( "Red" )
       );
       create( "Challenger", "Mitsubishi",
             "The Mitsubishi Challenger, called Mitsubishi Pajero Sport in most export markets, " +
@@ -139,10 +125,7 @@ public class CarServiceImpl implements CarService {
                   "medium sized SUV built by the Mitsubishi Motors Corporation. It was released " +
                   "in 1997, and is still built as of 2006, although it's no longer available in " +
                   "its native Japan since the end of 2003.",
-            "/widgets/getting_started/img/car6.png", 58750, new SortableColour(
-                  Color.GREEN.toString(),
-                  "Green"
-            )
+            "/widgets/getting_started/img/car6.png", 58750, new SortableColour( "Green" )
       );
       create( "Civic", "Honda",
             "The eighth generation Honda Civic is produced since 2006. It is available as a " +
@@ -155,8 +138,7 @@ public class CarServiceImpl implements CarService {
                   " economical as well. The Honda Civic is also available with a hybrid engine. " +
                   "In this case engine is coupled with an automatic transmission only. The 2" +
                   ".0-liter model is available with the paddle shift gearbox.",
-            "/widgets/getting_started/img/car1.png", 17479,
-            new SortableColour( Color.RED.toString(), "Red" )
+            "/widgets/getting_started/img/car1.png", 17479, new SortableColour( "Red" )
       );
       create( "New Beetle", "Volkswagen", " The Volkswagen Beetle is produced " +
                   "since 1998. It is available as a coupe or convertible."
@@ -166,8 +148,7 @@ public class CarServiceImpl implements CarService {
                   + " The new Beetle has nothing in common with the rear-engined original, except" +
                   " the 'retro' design. It is based on the VW Golf and has the same solid build " +
                   "quality.",
-            "/widgets/getting_started/img/car2.png", 67540,
-            new SortableColour( Color.YELLOW.toString(), "Yellow" )
+            "/widgets/getting_started/img/car2.png", 67540, new SortableColour( "Yellow" )
       );
       create( "Golf V", "Volkswagen",
             "The Volkswagen Golf V is produced since 2003. There is a wide range of fine and " +
@@ -181,8 +162,7 @@ public class CarServiceImpl implements CarService {
                   "enough feedback to the driver. The ride is a bit firm in town, as the " +
                   "reliability of suspension was preferred to the comfort. It is a common feature" +
                   " of all VW Golf's.",
-            "/widgets/getting_started/img/car3.png", 78200,
-            new SortableColour( Color.BLUE.toString(), "Blue" )
+            "/widgets/getting_started/img/car3.png", 78200, new SortableColour( "Blue" )
       );
       create( "Neon", "Chrysler",
             " This car is sold as the Dodge Neon in the United States and as Chrysler Neon for " +
@@ -190,8 +170,7 @@ public class CarServiceImpl implements CarService {
                   + " There is a choice of three petrol engines. The basic 1.6-liter petrol is " +
                   "the same unit found on the MINI. The top of the range is a 2.0-liter engine, " +
                   "providing 133 hp, besides acceleration is a weak point of all Neons.",
-            "/widgets/getting_started/img/car4.png", 85400,
-            new SortableColour( Color.RED.toString(), "Red" )
+            "/widgets/getting_started/img/car4.png", 85400, new SortableColour( "Red" )
       );
    }
 

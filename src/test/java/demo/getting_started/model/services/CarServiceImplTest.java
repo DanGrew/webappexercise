@@ -50,7 +50,7 @@ public class CarServiceImplTest {
    public void shouldAddNewCar() {
       Car returned = systemUnderTest.create(
             "new model", "new make", "new description", "new preview",
-            394873987, new SortableColour( Color.WHITE.toString(), "White" )
+            394873987, new SortableColour( "White" )
       );
 
       Car newlyAdded = systemUnderTest.findAll().get( systemUnderTest.findAll().size() - 1 );

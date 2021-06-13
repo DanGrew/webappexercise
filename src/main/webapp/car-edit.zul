@@ -36,10 +36,6 @@
                         <label id="colourNameLabel" value="Colour Name"/>
                         <textbox id="colourNameTextBox" constraint="no empty" width="100%"/>
                     </row>
-                    <row>
-                        <label id="colourChooserLabel" value="Colour"/>
-                        <colorbox id="colourChooserBox" width="100%"/>
-                    </row>
                 </rows>
             </grid>
         </panelchildren>
