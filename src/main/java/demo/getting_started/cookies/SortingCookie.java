@@ -1,5 +1,7 @@
 package demo.getting_started.cookies;
 
+import java.util.Optional;
+
 /**
  * Encapsulates the information associated with a sorting cookie. We want to persist a single
  * type of sorting for one column, and so we compose a value of the column reference and the
@@ -63,10 +65,13 @@ class SortingCookie {
     * Builds a new {@link SortingCookie} from the value held in a cookie by splitting it into the
     * relevant information.
     * @param value to split.
-    * @return the resulting {@link SortingCookie}.
+    * @return the resulting {@link SortingCookie}, or empty if cookie value invalid.
     */
-   static SortingCookie cookieForValue( String value ) {
+   static Optional< SortingCookie > cookieForValue( String value ) {
       String[] parts = value.split( "-" );
-      return new SortingCookie( parts[0], parts[1] );
+      if ( parts.length != 2 ) {
+         return Optional.empty();
+      }
+      return Optional.of( new SortingCookie( parts[0], parts[1] ) );
    }
 }

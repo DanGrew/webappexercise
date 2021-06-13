@@ -127,6 +127,8 @@ public class Cookies {
       }
       return Optional.ofNullable( cookieValue )
             .map( SortingCookie::cookieForValue )
+            .filter( Optional::isPresent )
+            .map( Optional::get )
             .map( cookie -> cookie.getSortingForKey( key ) )
             .orElse( SORTING_NATURAL );
    }
@@ -138,6 +140,8 @@ public class Cookies {
    public Optional< String > getSortingKey() {
       return Optional.ofNullable( getCookie( SORTING_COOKIE ) )
             .map( SortingCookie::cookieForValue )
+            .filter( Optional::isPresent )
+            .map( Optional::get )
             .map( SortingCookie::getKey );
    }
 
@@ -148,6 +152,8 @@ public class Cookies {
    public Optional< String > getSortingDirection() {
       return Optional.ofNullable( getCookie( SORTING_COOKIE ) )
             .map( SortingCookie::cookieForValue )
+            .filter( Optional::isPresent )
+            .map( Optional::get )
             .map( SortingCookie::getSorting );
    }
 

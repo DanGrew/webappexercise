@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class SortingCookieTest {
 
@@ -31,9 +32,20 @@ public class SortingCookieTest {
 
    @Test
    public void shouldParseBackFromValue() {
-      SortingCookie sortingCookie = SortingCookie.cookieForValue( systemUnderTest.toValue() );
+      SortingCookie sortingCookie = SortingCookie.cookieForValue( systemUnderTest.toValue() ).get();
       assertThat( sortingCookie.getSorting(), equalTo( systemUnderTest.getSorting() ) );
       assertThat( sortingCookie.getKey(), equalTo( systemUnderTest.getKey() ) );
    }
 
+   @Test
+   public void shouldHandleInvalidCookies() {
+      assertAll(
+            () -> assertThat( SortingCookie.cookieForValue( "anything" ).isPresent(),
+                  equalTo( false ) ),
+            () -> assertThat( SortingCookie.cookieForValue( "too-many-params" ).isPresent(),
+                  equalTo( false ) ),
+            () -> assertThat( SortingCookie.cookieForValue( "split wrong" ).isPresent(),
+                  equalTo( false ) )
+      );
+   }
 }
