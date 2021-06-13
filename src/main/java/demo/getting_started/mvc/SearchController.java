@@ -58,6 +58,10 @@ public class SearchController extends SelectorComposer< Component > {
    private Component detailBox;
    @Wire
    private Checkbox pagingCheckBox;
+   @Wire
+   private Button deleteSelectionButton;
+   @Wire
+   private Button editSelectionButton;
 
    @WireVariable
    private CarService carService;
@@ -139,6 +143,8 @@ public class SearchController extends SelectorComposer< Component > {
             ) );
 
       Optional< Car > currentSelection = listModelOperations.retrieveCurrentSelection( model );
+      deleteSelectionButton.setDisabled( !currentSelection.isPresent() );
+      editSelectionButton.setDisabled( !currentSelection.isPresent() );
       if ( !currentSelection.isPresent() ) {
          //nothing to select, hide detail
          detailBox.setVisible( false );
@@ -344,6 +350,14 @@ public class SearchController extends SelectorComposer< Component > {
 
    void setPriceHeader( Listheader priceHeader ) {
       this.priceHeader = priceHeader;
+   }
+
+   void setDeleteSelectionButton( Button deleteSelectionButton ) {
+      this.deleteSelectionButton = deleteSelectionButton;
+   }
+
+   void setEditSelectionButton( Button editSelectionButton ) {
+      this.editSelectionButton = editSelectionButton;
    }
 }
 

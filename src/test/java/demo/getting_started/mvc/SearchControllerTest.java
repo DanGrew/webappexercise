@@ -78,6 +78,10 @@ public class SearchControllerTest {
    private Listheader colourHeader;
    @Mock
    private Listheader priceHeader;
+   @Mock
+   private Button deleteSelectionButton;
+   @Mock
+   private Button editSelectionButton;
 
    @Mock
    private CarService carService;
@@ -109,6 +113,8 @@ public class SearchControllerTest {
       systemUnderTest.setMakeHeader( makeHeader );
       systemUnderTest.setModelHeader( modelHeader );
       systemUnderTest.setPriceHeader( priceHeader );
+      systemUnderTest.setDeleteSelectionButton( deleteSelectionButton );
+      systemUnderTest.setEditSelectionButton( editSelectionButton );
    }
 
    @Test
@@ -144,6 +150,13 @@ public class SearchControllerTest {
    }
 
    @Test
+   public void shouldEnableEditAndDeleteWhenRestoringSelection() {
+      shouldRestoreSelectionWhenSearching();
+      verify( deleteSelectionButton ).setDisabled( false );
+      verify( editSelectionButton ).setDisabled( false );
+   }
+
+   @Test
    public void shouldNotRestoreSelectionWhenSearchResultsDoNotContainSelection() {
       Car selected = new Car();
       List< Car > searchResult = asList( new Car() );
@@ -164,6 +177,8 @@ public class SearchControllerTest {
    public void shouldRetainDetailShownFollowingSearch() {
       shouldRestoreSelectionWhenSearching();
       verify( detailBox ).setVisible( true );
+      verify( deleteSelectionButton ).setDisabled( false );
+      verify( editSelectionButton ).setDisabled( false );
    }
 
    @Test
@@ -253,15 +268,15 @@ public class SearchControllerTest {
       systemUnderTest.sortModel();
       verify( listSorting ).configureSortForDirectionChange(
             MODEL_SORTING_KEY, SORTING_DESCENDING );
-      
+
       systemUnderTest.sortMake();
       verify( listSorting ).configureSortForDirectionChange(
             MAKE_SORTING_KEY, SORTING_ASCENDING );
-      
+
       systemUnderTest.sortColour();
       verify( listSorting ).configureSortForDirectionChange(
             COLOUR_SORTING_KEY, SORTING_NATURAL );
-      
+
       systemUnderTest.sortPrice();
       verify( listSorting ).configureSortForDirectionChange(
             PRICE_SORTING_KEY, SORTING_DESCENDING );
